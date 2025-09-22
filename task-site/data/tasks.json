@@ -1,0 +1,14 @@
+[
+  {
+    "_id": "64fe9d...",
+    "userId": "u123",
+    "title": "Finish project report",
+    "status": "in_progress",
+    "steps": [
+      { "text": "Draft outline", "completed": false },
+      { "text": "Write content", "completed": false },
+      { "text": "Email report", "completed": true }
+    ],
+    "dueDate": "2025-09-30T00:00:00Z"
+  }
+]
