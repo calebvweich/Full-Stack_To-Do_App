@@ -1,21 +1,23 @@
 .buttonContainer {
-    background-color: #D9D9D9;
-    width: fit-content;
-    padding: 1% 2%;
-    border-radius: 10px;
-    box-shadow: 1px 2px black;
-    
+  background-color: #D9D9D9;
+  width: fit-content;
+  padding: 1% 2%;
+  border-radius: 25px;
+  box-shadow: 1px 2px black;
+  min-height: 40px;
+  min-width: 40px;
 }
 .buttonContainer:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 .buttonContainer:active {
-    box-shadow: -1px -2px black;
+  box-shadow: -1px -2px black;
 }
 
 .buttonText {
-    font-family: 'Roboto Serif';
-    font-size: 16px;
-    display: flex;
-    color: #675858;
+  font-size: 24px;
+  color: #675858;
+  align-items: center;
+  text-align: center;
+  line-height: 40px;
 }
