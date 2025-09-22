@@ -28,26 +28,32 @@ export default function TaskPage() {
 
   return (
     <div className="body">
-      <div className="filters">
-        <div className="filterType">
-          Group Name
-          <div className="filters">
-            {groupNames.map((name, index) => {
-              return(
-                <Button key={index} content={name} />
-              )
-            })}
+      <div className="options">
+        <div className="filters">
+          <div className="filterType">
+            Group Name
+            <div className="filters">
+              {groupNames.map((name, index) => {
+                return(
+                  <Button key={index} content={name} />
+                )
+              })}
+            </div>
+          </div>
+          <div className="filterType">
+            Status
+            <div className="filters">
+              {statusOptions.map((name, index) => {
+                return(
+                  <Button key={index} content={name} />
+                )
+              })}
+            </div>
           </div>
         </div>
-        <div className="filterType">
-          Status
-          <div className="filters">
-            {statusOptions.map((name, index) => {
-              return(
-                <Button key={index} content={name} />
-              )
-            })}
-          </div>
+        <div className="newButton">
+          New Task/Group
+          <Button content={"+"} />
         </div>
       </div>
       <div className="taskArea">

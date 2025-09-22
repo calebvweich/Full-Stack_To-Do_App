@@ -26,3 +26,12 @@
   background: #D9D5C9;
   border-radius: 25px;
 }
+.options {
+  display: flex;
+  justify-content: space-between;
+}
+.newButton {
+  padding: 1rem;
+  background: #D9D5C9;
+  border-radius: 25px;
+}

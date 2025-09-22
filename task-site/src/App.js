@@ -6,6 +6,7 @@ import Button from './Components/Button/Button';
 
 // PAGES
 import TaskPage from "./pages/TaskPage/TaskPage"
+import LoginPage from './pages/LoginPage/LoginPage';
 
 function App() {
 
@@ -19,11 +20,11 @@ function App() {
           <Button content={"Account"}/>
           <div className="headerText">Welcome Name</div>
         </div>
-        <div className="newTask">
-          <Button content={"+"} />
+        <div className="logoutButton">
+          <Button content={"LogOut"} />
         </div>
       </header>
-      <TaskPage />
+      <LoginPage />
     </div>
   );
 }

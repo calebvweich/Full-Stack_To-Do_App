@@ -1,0 +1,30 @@
+.loginContainer {
+  background: #D9D5C9;
+  display: block;
+  justify-self: center;
+  width: 30%;
+  height: 40%;
+  min-width: 600px;
+  padding: 2rem;
+  border-radius: 25px;
+  margin-top: 5rem;
+  font-size: 24px;
+  color: #675858;
+}
+.loginHeader {
+  padding-bottom: 1rem;
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+}
+.selected {
+  color: aqua !important;
+  border-bottom: 1px solid aqua !important;
+}
+.loginHeaderText {
+  padding-bottom: .5rem;
+  color: #675858;
+  cursor: pointer;
+  width: 50%;
+  border-bottom: 1px solid #675858;
+}
