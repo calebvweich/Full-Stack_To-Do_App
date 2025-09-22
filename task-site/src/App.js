@@ -1,5 +1,6 @@
 import './App.css';
 import Button from './Components/Button/Button';
+import Task from './Components/Task/Task';
 
 function App() {
   return (
@@ -13,6 +14,9 @@ function App() {
           <Button content={"+"} />
         </div>
       </header>
+      <div className="taskArea">
+        <Task taskName={"Task manager app"}/>
+      </div>
     </div>
   );
 }

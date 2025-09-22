@@ -5,7 +5,6 @@
   font-family: 'Roboto Serif';
 }
 .appHeader {
-  width: 96%;
   padding: 2%;
   background: #4A4A4A;
   border-radius: 0px 0px 14px 14px;
@@ -20,4 +19,7 @@
 .headerText {
   font-size: 32px;
   color: #D9D9D9;
+}
+.taskArea {
+  padding: 5%;
 }

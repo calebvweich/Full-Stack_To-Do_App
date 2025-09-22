@@ -1,0 +1,13 @@
+.taskContainer {
+  width: 20%;
+  min-width: 200px;
+  height: fit-content;
+  padding: 2%;
+  background: #D9D5C9;
+  border-radius: 25px;
+}
+.taskName {
+  font-size: 20px;
+  color: #675858;
+  text-align: center;
+}
