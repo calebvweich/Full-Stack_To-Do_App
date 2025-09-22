@@ -1,11 +1,11 @@
 const API_URL = "http://localhost:5000/api";
 
 // Register
-export async function register(username, password) {
+export async function register(username, name, password) {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username, name, password }),
   });
   return res.json();
 }

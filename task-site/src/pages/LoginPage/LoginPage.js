@@ -1,14 +1,76 @@
 import { useState } from "react"
+import { login, register } from "../../api";
 import "./LoginPage.css"
 
 function Login() {
+  const [username, setusername] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const res = await login(username, password);
+    if (res.token) {
+      console.log("Logged In: ", res);
+    } else {
+      console.log("Failed: ", res);
+    }
+  }
+
   return(
-    <div>Login</div>
+    <form onSubmit={handleSubmit}>
+      <label>username</label><br/>
+      <input
+        type="username"
+        value={username}
+        onChange={(e) => setusername(e.target.value)}
+      />
+      <br/><label>Password</label><br/>
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <br/><button type="submit">Login</button>
+    </form>
   )
 }
 function Register() {
+  const [username, setusername] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const res = await register(username, name, password);
+    if (res.token) {
+      console.log("Registered: ", res);
+    } else {
+      console.log("Failed: ", res);
+    }
+  }
+
   return(
-    <div>Register</div>
+    <form onSubmit={handleSubmit}>
+      <label>username</label><br/>
+      <input
+        type="username"
+        value={username}
+        onChange={(e) => setusername(e.target.value)}
+      />
+      <br/><label>Name</label><br/>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <br/><label>Password</label><br/>
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <br/><button type="submit">Login</button>
+    </form>
   )
 }
 
