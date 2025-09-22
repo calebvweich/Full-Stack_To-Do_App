@@ -1,11 +1,11 @@
 import './App.css';
-import Button from './Components/Button';
+import Button from './Components/Button/Button';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Button />
+        <Button content={"Account"}/>
       </header>
     </div>
   );

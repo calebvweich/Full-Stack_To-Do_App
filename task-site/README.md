@@ -1,3 +1,6 @@
+# Full-Stack_To-Do_App
+Full stack app for task management with CRUD operations, JWT authentication and APIs using React, Node.js, Express and MongoDB
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -68,3 +71,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Code Layout
+
+Front-end code will be in the src folder.
+Custom components should be sorted into the Components folder. Create a new folder for each component with a js and css file
