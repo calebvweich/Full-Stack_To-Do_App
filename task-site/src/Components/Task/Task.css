@@ -1,9 +1,10 @@
 .taskContainer {
   width: 20%;
   min-width: 200px;
+  max-width: 350px;
   height: fit-content;
-  padding: 2%;
-  background: #D9D5C9;
+  padding: 2rem;
+  background: #EDE7DA;
   border-radius: 25px;
 }
 .taskName {

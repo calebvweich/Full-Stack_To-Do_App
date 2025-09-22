@@ -1,0 +1,15 @@
+.groupContainer {
+  padding: 2rem;
+  background: #D9D5C9;
+  border-radius: 25px;
+}
+.groupName {
+  font-size: 24px;
+  color: #675858;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+.groupedTasks {
+  display: flex;
+  gap: 2rem;
+}
