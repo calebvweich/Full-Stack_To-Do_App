@@ -11,4 +11,26 @@
   font-size: 20px;
   color: #675858;
   text-align: center;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.step {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: .4rem;
+}
+.step:hover {
+  background-color: #D9D5C9;
+  cursor: pointer;
+}
+.checked {
+  background-color: rgb(58, 126, 190);
+}
+.checkbox, .checked {
+  width: .6rem;
+  height: .6rem;
+  border: 2px solid gray;
+  border-radius: .4rem;
 }

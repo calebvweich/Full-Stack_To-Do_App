@@ -11,7 +11,7 @@ export default function Group({name, tasks}) {
       <div className="groupedTasks">
         {tasks.map((task, index) => {
           return(
-            <Task key={index} taskName={task.title} />
+            <Task key={index} task={task} />
           )
         })}
       </div>

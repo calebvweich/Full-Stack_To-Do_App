@@ -1,0 +1,12 @@
+.checked {
+    background-color: rgb(58, 126, 190);
+}
+.checkbox, .checked {
+    width: .6rem;
+    height: .6rem;
+    border: 2px solid gray;
+    border-radius: .4rem;
+}
+.checkbox:hover, .checked:hover {
+    cursor: pointer;
+}

@@ -13,54 +13,17 @@
     "dueDate": "2025-09-30T00:00:00Z"
   },
   {
-    "_id": "64fe9d...",
+    "_id": "64fg9d...",
     "userId": "u123",
-    "title": "Frontend",
-    "status": "in_progress",
+    "title": "Backend",
+    "status": "Not Started",
     "group": "group123",
     "steps": [
-      { "text": "Header", "completed": false },
-      { "text": "Tasks", "completed": false },
-      { "text": "Groups", "completed": false }
-    ],
-    "dueDate": "2025-09-30T00:00:00Z"
-  },
-  {
-    "_id": "64fe9d...",
-    "userId": "u123",
-    "title": "Frontend",
-    "status": "in_progress",
-    "group": "group234",
-    "steps": [
-      { "text": "Header", "completed": false },
-      { "text": "Tasks", "completed": false },
-      { "text": "Groups", "completed": false }
-    ],
-    "dueDate": "2025-09-30T00:00:00Z"
-  },
-  {
-    "_id": "64fe9d...",
-    "userId": "u123",
-    "title": "Frontend",
-    "status": "in_progress",
-    "group": "group234",
-    "steps": [
-      { "text": "Header", "completed": false },
-      { "text": "Tasks", "completed": false },
-      { "text": "Groups", "completed": false }
-    ],
-    "dueDate": "2025-09-30T00:00:00Z"
-  },
-  {
-    "_id": "64fe9d...",
-    "userId": "u123",
-    "title": "Frontend",
-    "status": "in_progress",
-    "group": "none",
-    "steps": [
-      { "text": "Header", "completed": false },
-      { "text": "Tasks", "completed": false },
-      { "text": "Groups", "completed": false }
+      { "text": "Create", "completed": false },
+      { "text": "Read", "completed": false },
+      { "text": "Update", "completed": false },
+      { "text": "Delete", "completed": false },
+      { "text": "Auth", "completed": false}
     ],
     "dueDate": "2025-09-30T00:00:00Z"
   }

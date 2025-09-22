@@ -21,7 +21,7 @@ function App() {
   groups.forEach(group => {
     groupNames.push(group.name)
   });
-  const statusOptions = ["Idle", "In-Progress", "Completed", "On-Hold"]
+  const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
 
   //FUNCTIONS
   
@@ -68,7 +68,7 @@ function App() {
           })}
           {tasks.filter(task => task.group === "none").map((task, index) => {
             return(
-              <Task key={index} taskName={"No Group Task"} />
+              <Task key={index} task={task} />
             )
           })}
         </div>
