@@ -24,6 +24,7 @@ router.post("/newTask", auth, async (req, res) => {
   }
 })
 
+// New Group
 router.post("/newGroup", auth, async (req, res) => {
   try {
     const { name } = req.body;
@@ -53,6 +54,26 @@ router.get("/getGroups", auth, async (req, res) => {
   try {
     const userGroups = await group.find({ userId: req.user.id })
     res.json(userGroups)
+  } catch (err) {
+    res.status(500).json({ msg: err.message })
+  }
+})
+
+// Delete Task
+router.delete("deleteTask", auth, async (req, res) => {
+  try {
+    const deleteId = req.body
+    await task.deleteOne({ _id: deleteId })
+  } catch (err) {
+    res.status(500).json({ msg: err.message })
+  }
+})
+
+// Delete Group
+router.delete("deleteGroup", auth, async (req, res) => {
+  try {
+    const deleteId = req.body
+    await group.deleteOne({ _id: deleteId })
   } catch (err) {
     res.status(500).json({ msg: err.message })
   }

@@ -85,6 +85,28 @@ export async function getGroups() {
   }
 }
 
+// Delete Task
+export async function deleteTask(id) {
+  const res = await fetch (`${API_URL}/tasks/deleteTask`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: JSON.stringify({ deleteId: id })
+  })
+}
+
+// Delete Group
+export async function deleteGroup(id) {
+  const res = await fetch (`${API_URL}/tasks/deleteGroup`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: JSON.stringify({ deleteId: id })
+  })
+}
+
 // Get protected data
 export async function getProtected() {
   const token = localStorage.getItem("token");
