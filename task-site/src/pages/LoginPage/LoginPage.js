@@ -20,7 +20,7 @@ function Login({validate}) {
     <form onSubmit={handleSubmit}>
       <label>Email</label><br/>
       <input
-        type="username"
+        type="email"
         value={username}
         onChange={(e) => setusername(e.target.value)}
       />
@@ -53,7 +53,7 @@ function Register({validate}) {
     <form onSubmit={handleSubmit}>
       <label>Email</label><br/>
       <input
-        type="username"
+        type="email"
         value={username}
         onChange={(e) => setusername(e.target.value)}
       />

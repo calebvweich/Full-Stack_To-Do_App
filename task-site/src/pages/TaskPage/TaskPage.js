@@ -13,12 +13,14 @@ import groups from '../../data/groupExample.json'
 // LIBRARIES
 import { useState } from 'react';
 import Dialog from '../../Components/Dialog/Dialog';
+import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask';
 
 export default function TaskPage() {
   // VARIABLES
   const [selectedGroup, setSelectedGroup] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [dialogTab, setDialogTab] = useState("Task")
   const groupNames = []
   groups.forEach(group => {
     groupNames.push(group.name)
@@ -71,7 +73,11 @@ export default function TaskPage() {
         })}
       </div>
       {dialogOpen && (
-        <Dialog close={() => setDialogOpen(false)} />
+        <Dialog
+          close={() => setDialogOpen(false)}
+          title={<NewTaskHeader tab={dialogTab} setTab={setDialogTab} />}
+          content={<NewTask tab={dialogTab} />}
+        />
       )}
     </div>
   );
