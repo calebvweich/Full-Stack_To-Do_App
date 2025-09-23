@@ -10,11 +10,13 @@ function TaskForm({steps}) {
   const [dueDate, setDueDate] = useState(null)
 
   async function handleSubmit(e) {
-    console.log(`Title: ${title}, Steps: ${steps}, Group: ${group}, DueDate: ${dueDate}`)
+    // userId, title, status, group, steps, dueDate
+    // Auto set userId, status
+    console.log(`Title: ${title}, Steps: ${steps.map((step, index) => <div key={index}>{step}</div>)}, Group: ${group}, DueDate: ${dueDate}`)
   }
 
   function addStep() {
-    steps.push(step);
+    steps.push({ "text": step, "completed": false});
     setStep("")
   }
 
@@ -36,7 +38,7 @@ function TaskForm({steps}) {
         <button type="button" onClick={addStep}>+</button>
         {steps.map((step, index) => {
           return(
-            <label key={index}><br/>{step}</label>
+            <label key={index}><br/>{step.text}</label>
           )}
         )}
         <br/><label>Group</label><br/>
