@@ -1,5 +1,6 @@
 [
     {
-        "_id": "group123", "name": "Task Manager App"
+        "_id": "group123",
+        "name": "Task Manager App"
     }
 ]
