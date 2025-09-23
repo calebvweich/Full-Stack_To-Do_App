@@ -9,10 +9,14 @@ function TaskForm({steps}) {
   const [group, setGroup] = useState("None")
   const [dueDate, setDueDate] = useState(null)
 
-  async function handleSubmit(e) {
-    // userId, title, status, group, steps, dueDate
-    // Auto set userId, status
-    console.log(`Title: ${title}, Steps: ${steps.map((step, index) => <div key={index}>{step}</div>)}, Group: ${group}, DueDate: ${dueDate}`)
+  async function handleSubmit() {
+    console.log(title,group,steps,dueDate)
+    const res = await newTask(title,group,steps,dueDate);
+    if (res) {
+      console.log(res)
+    } else {
+      console.log("Failed: ", res);
+    }
   }
 
   function addStep() {

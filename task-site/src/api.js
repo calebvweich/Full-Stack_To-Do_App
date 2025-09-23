@@ -28,11 +28,14 @@ export async function login(username, password) {
 
 // -----TASKS------
 // New Task
-export async function newTask(userId, title, status, group, steps, dueDate) {
+export async function newTask(title, group, steps, dueDate) {
   const res = await fetch(`${API_URL}/tasks/newTask`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId, title, status, group, steps, dueDate })
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: JSON.stringify({ title, group, steps, dueDate })
   });
   const data = await res.json();
 
