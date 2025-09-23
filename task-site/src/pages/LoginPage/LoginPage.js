@@ -2,7 +2,7 @@ import { useState } from "react"
 import { login, register } from "../../api";
 import "./LoginPage.css"
 
-function Login() {
+function Login({validate}) {
   const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -10,7 +10,7 @@ function Login() {
     e.preventDefault();
     const res = await login(username, password);
     if (res.token) {
-      console.log("Logged In: ", res);
+      validate(res.token)
     } else {
       console.log("Failed: ", res);
     }
@@ -18,7 +18,7 @@ function Login() {
 
   return(
     <form onSubmit={handleSubmit}>
-      <label>username</label><br/>
+      <label>Email</label><br/>
       <input
         type="username"
         value={username}
@@ -34,7 +34,7 @@ function Login() {
     </form>
   )
 }
-function Register() {
+function Register({validate}) {
   const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -43,7 +43,7 @@ function Register() {
     e.preventDefault();
     const res = await register(username, name, password);
     if (res.token) {
-      console.log("Registered: ", res);
+      validate(res.token)
     } else {
       console.log("Failed: ", res);
     }
@@ -51,7 +51,7 @@ function Register() {
 
   return(
     <form onSubmit={handleSubmit}>
-      <label>username</label><br/>
+      <label>Email</label><br/>
       <input
         type="username"
         value={username}
@@ -74,7 +74,7 @@ function Register() {
   )
 }
 
-export default function LoginPage() {
+export default function LoginPage({validate}) {
   const [selectedTab, setSelectedTab] = useState("Login")
   return(
     <div className="loginContainer">
@@ -83,9 +83,9 @@ export default function LoginPage() {
         <div className={selectedTab === "Register" ? "selected loginHeaderText" : "loginHeaderText"} onClick={() => setSelectedTab("Register")}>Register</div>
       </div>
       {selectedTab === "Login" ? (
-        <Login />
+        <Login validate={validate} />
       ) : (
-        <Register />
+        <Register validate={validate} />
       )}
     </div>
   )

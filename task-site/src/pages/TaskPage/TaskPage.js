@@ -12,11 +12,13 @@ import groups from '../../data/groupExample.json'
 
 // LIBRARIES
 import { useState } from 'react';
+import Dialog from '../../Components/Dialog/Dialog';
 
 export default function TaskPage() {
   // VARIABLES
   const [selectedGroup, setSelectedGroup] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("")
+  const [dialogOpen, setDialogOpen] = useState(false)
   const groupNames = []
   groups.forEach(group => {
     groupNames.push(group.name)
@@ -35,7 +37,7 @@ export default function TaskPage() {
             <div className="filters">
               {groupNames.map((name, index) => {
                 return(
-                  <Button key={index} content={name} />
+                  <Button key={index} text={name} onClick={() => setSelectedGroup(name)} />
                 )
               })}
             </div>
@@ -45,7 +47,7 @@ export default function TaskPage() {
             <div className="filters">
               {statusOptions.map((name, index) => {
                 return(
-                  <Button key={index} content={name} />
+                  <Button key={index} text={name} onClick={() => setSelectedStatus(name)} />
                 )
               })}
             </div>
@@ -53,7 +55,7 @@ export default function TaskPage() {
         </div>
         <div className="newButton">
           New Task/Group
-          <Button content={"+"} />
+          <Button text={"+"} onClick={() => setDialogOpen(true)} />
         </div>
       </div>
       <div className="taskArea">
@@ -68,6 +70,9 @@ export default function TaskPage() {
           )
         })}
       </div>
+      {dialogOpen && (
+        <Dialog close={() => setDialogOpen(false)} />
+      )}
     </div>
   );
 }

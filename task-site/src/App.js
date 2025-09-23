@@ -7,25 +7,52 @@ import Button from './Components/Button/Button';
 // PAGES
 import TaskPage from "./pages/TaskPage/TaskPage"
 import LoginPage from './pages/LoginPage/LoginPage';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { useState } from 'react';
+import { useEffect } from 'react';
+
 
 function App() {
-
+  const [token, setToken] = useState(localStorage.getItem("token"));
   //FUNCTIONS
+  function logout() {
+    localStorage.setItem("token", null)
+    setToken(null)
+  }
+
+  function login(token) {
+    localStorage.setItem("token", token)
+    setToken(token)
+  }
+  
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("token");
+    }
+  }, [token]);
   
 
   return (
-    <div className="app">
-      <header className="appHeader">
-        <div className="account">
-          <Button content={"Account"}/>
-          <div className="headerText">Welcome Name</div>
-        </div>
-        <div className="logoutButton">
-          <Button content={"LogOut"} />
-        </div>
-      </header>
-      <LoginPage />
-    </div>
+    <BrowserRouter>
+      <div className="app">
+        <header className="appHeader">
+          <div className="account">
+            <Button text={"Account"} />
+            <div className="headerText">Welcome Name</div>
+          </div>
+          <div className="logoutButton">
+            <Button text={"LogOut"} onClick={logout} />
+          </div>
+        </header>
+        <Routes>
+          <Route path="/" element={token != null ? <Navigate to="/tasks" /> : <LoginPage validate={login} />}/>
+          <Route path="/tasks" element={token != null ? <TaskPage /> : <Navigate to="/" />}/>
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
