@@ -24,4 +24,38 @@ router.post("/newTask", auth, async (req, res) => {
   }
 })
 
+router.post("/newGroup", auth, async (req, res) => {
+  try {
+    const { name } = req.body;
+    const newGroup = new group({
+      userId: req.user.id,
+      name: name
+    })
+    await newGroup.save();
+    res.status(201).json(newGroup)
+  } catch (err) {
+    res.status(500).json({ msg: err.message })
+  }
+})
+
+// Get Tasks
+router.get("/getTasks", auth, async (req, res) => {
+  try {
+    const userTasks = await task.find({ userId: req.user.id })
+    res.json(userTasks)
+  } catch (err) {
+    res.status(500).json({ msg: err.message })
+  }
+})
+
+// Get Groups
+router.get("/getGroups", auth, async (req, res) => {
+  try {
+    const userGroups = await group.find({ userId: req.user.id })
+    res.json(userGroups)
+  } catch (err) {
+    res.status(500).json({ msg: err.message })
+  }
+})
+
 export default router;

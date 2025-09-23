@@ -5,15 +5,12 @@ import './TaskPage.css';
 import Button from '../../Components/Button/Button';
 import Task from '../../Components/Task/Task';
 import Group from '../../Components/Group/Group';
-
-// DATA
-import tasks from '../../data/exampleTask.json'
-import groups from '../../data/groupExample.json'
-
-// LIBRARIES
-import { useState } from 'react';
 import Dialog from '../../Components/Dialog/Dialog';
 import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask';
+
+// LIBRARIES
+import { useEffect, useState } from 'react';
+import { getTasks, getGroups } from '../../api';
 
 export default function TaskPage() {
   // VARIABLES
@@ -22,13 +19,27 @@ export default function TaskPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogTab, setDialogTab] = useState("Task")
   const groupNames = []
-  groups.forEach(group => {
-    groupNames.push(group.name)
-  });
   const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
+  // DB
+  const [tasks, setTasks] = useState([])
+  const [groups, setGroups] = useState([])
 
   //FUNCTIONS
-  
+  async function getUserTasks() {
+    const groupRes = await getGroups()
+    if (groupRes) {
+      setGroups(groupRes)
+    }
+    const taskRes = await getTasks()
+    if (taskRes) {
+      setTasks(taskRes)
+    }
+  }
+
+  // useEffect to get tasks and groups
+  useEffect(() => {
+    getUserTasks()
+  }, [])
 
   return (
     <div className="body">
@@ -37,9 +48,9 @@ export default function TaskPage() {
           <div className="filterType">
             Group Name
             <div className="filters">
-              {groupNames.map((name, index) => {
+              {groups.map((group, index) => {
                 return(
-                  <Button key={index} text={name} onClick={() => setSelectedGroup(name)} />
+                  <Button key={index} text={group.name} onClick={() => setSelectedGroup(group.name)} />
                 )
               })}
             </div>
@@ -63,7 +74,7 @@ export default function TaskPage() {
       <div className="taskArea">
         {groups.map((group, index) => {
           return(
-            <Group key={index} name={group.name} tasks={tasks.filter(task => task.group === group._id)}/>
+            <Group key={index} name={group.name} tasks={tasks.filter(task => task.group === group.name)}/>
           )
         })}
         {tasks.filter(task => task.group === "none").map((task, index) => {

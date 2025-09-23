@@ -42,9 +42,48 @@ export async function newTask(title, group, steps, dueDate) {
   return data;
 }
 
+// New Group
+export async function newGroup(name) {
+  const res = await fetch(`${API_URL}/tasks/newGroup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: JSON.stringify({ name })
+  });
+  const data = await res.json();
 
+  return data;
+}
 
+// Get Tasks
+export async function getTasks() {
+  const res = await fetch (`${API_URL}/tasks/getTasks`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  if (res.ok) {
+    const tasks = await res.json();
+    return tasks
+  }
+}
 
+// Get Groups
+export async function getGroups() {
+  const res = await fetch (`${API_URL}/tasks/getGroups`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  if (res.ok) {
+    const groups = await res.json();
+    return groups
+  }
+}
 
 // Get protected data
 export async function getProtected() {

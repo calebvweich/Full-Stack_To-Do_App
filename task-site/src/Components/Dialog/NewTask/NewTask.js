@@ -1,7 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./NewTask.css"
-import groups from "../../../data/groupExample.json"
-import { newTask } from "../../../api"
+import { newGroup, newTask, getGroups } from "../../../api"
 
 function TaskForm({steps}) {
   const [title, setTitle] = useState("")
@@ -9,8 +8,18 @@ function TaskForm({steps}) {
   const [group, setGroup] = useState("None")
   const [dueDate, setDueDate] = useState(null)
 
+  const [groupList, setGroupList] = useState([])
+  async function getUserGroups() {
+    const groupRes = await getGroups()
+    if (groupRes) {
+      groupRes.forEach(group => {
+        groupList.push(group.name)
+      });
+      setGroupList(groupRes)
+    }
+  }
+
   async function handleSubmit() {
-    console.log(title,group,steps,dueDate)
     const res = await newTask(title,group,steps,dueDate);
     if (res) {
       console.log(res)
@@ -23,6 +32,10 @@ function TaskForm({steps}) {
     steps.push({ "text": step, "completed": false});
     setStep("")
   }
+
+  useEffect(() => {
+    getUserGroups()
+  }, [])
 
   return(
     <div className="taskFormContainer">
@@ -48,7 +61,7 @@ function TaskForm({steps}) {
         <br/><label>Group</label><br/>
         <select id="groups" name="groups" onChange={(e) => setGroup(e.target.value)}>
           <option value="none">None</option>
-          {groups.map((group, index) => {
+          {groupList.map((group, index) => {
             return(
               <option value={group.name} key={index}>{group.name}</option>
             )
@@ -67,8 +80,29 @@ function TaskForm({steps}) {
 }
 
 function GroupForm() {
+  const [name, setName] = useState("")
+
+  async function handleSubmit() {
+    const res = await newGroup(name);
+    if (res) {
+      console.log(res)
+    } else {
+      console.log("Failed: ", res);
+    }
+  }
+
   return(
-    <div>Group</div>
+    <div className="taskFormContainer">
+      <form onSubmit={handleSubmit}>
+        <label>Name</label><br/>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <br/><br/><br/><br/><button type="submit">Submit</button>
+      </form>
+    </div>
   )
 }
 
