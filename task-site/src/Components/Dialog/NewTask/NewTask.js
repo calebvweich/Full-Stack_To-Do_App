@@ -1,17 +1,19 @@
 import { useState } from "react"
 import "./NewTask.css"
 import groups from "../../../data/groupExample.json"
+import { newTask } from "../../../api"
 
 function TaskForm({steps}) {
   const [title, setTitle] = useState("")
   const [step, setStep] = useState("")
+  const [group, setGroup] = useState("None")
+  const [dueDate, setDueDate] = useState(null)
 
-  function handleSubmit() {
-    console.log("Done")
+  async function handleSubmit(e) {
+    console.log(`Title: ${title}, Steps: ${steps}, Group: ${group}, DueDate: ${dueDate}`)
   }
 
   function addStep() {
-    console.log(step, steps)
     steps.push(step);
     setStep("")
   }
@@ -38,7 +40,7 @@ function TaskForm({steps}) {
           )}
         )}
         <br/><label>Group</label><br/>
-        <select id="groups" name="groups">
+        <select id="groups" name="groups" onChange={(e) => setGroup(e.target.value)}>
           <option value="none">None</option>
           {groups.map((group, index) => {
             return(
@@ -49,11 +51,9 @@ function TaskForm({steps}) {
         <br/><label>Due Date</label><br/>
         <input
           type="date"
+          value={dueDate}
+          onChange={(e) => (setDueDate(e.target.value))}
         />
-        {/* 
-          Get groups
-          map groups to option
-        */}
         <br/><br/><br/><br/><button type="submit">Submit</button>
       </form>
     </div>
