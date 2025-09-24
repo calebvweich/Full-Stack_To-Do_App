@@ -20,6 +20,7 @@ export default function TaskPage() {
   const [dialogTab, setDialogTab] = useState("Task")
   const groupNames = []
   const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
+  const [manageMode, setManageMode] = useState(false)
   // DB
   const [tasks, setTasks] = useState([])
   const [groups, setGroups] = useState([])
@@ -67,19 +68,22 @@ export default function TaskPage() {
           </div>
         </div>
         <div className="newButton">
-          New Task/Group
-          <Button text={"+"} onClick={() => setDialogOpen(true)} />
+          Manage Tasks
+          <div className="manageButtons">
+            <Button text={"New"} onClick={() => setDialogOpen(true)} />
+            <Button text={"Manage"} onClick={() => setManageMode(!manageMode)} />
+          </div>
         </div>
       </div>
       <div className="taskArea">
         {groups.map((group, index) => {
           return(
-            <Group key={index} name={group.name} tasks={tasks.filter(task => task.group === group.name)}/>
+            <Group key={index} name={group.name} tasks={tasks.filter(task => task.group === group.name)} manageMode={manageMode}/>
           )
         })}
         {tasks.filter(task => task.group === "none").map((task, index) => {
           return(
-            <Task key={index} task={task} />
+            <Task key={index} task={task} manageMode={manageMode} />
           )
         })}
       </div>

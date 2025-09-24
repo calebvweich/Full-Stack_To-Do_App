@@ -35,3 +35,8 @@
   background: #D9D5C9;
   border-radius: 25px;
 }
+.manageButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}

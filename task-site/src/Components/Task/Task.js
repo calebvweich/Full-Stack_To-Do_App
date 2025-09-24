@@ -2,9 +2,10 @@ import { useState } from "react";
 import "./Task.css"
 import Progress from "../Progress/Progress";
 
-export default function Task({task}) {
+export default function Task({task, manageMode}) {
   // Create local state for the task to enable re-rendering
   const [taskState, setTaskState] = useState(task);
+  console.log(manageMode)
 
   // Handler function to toggle step completion
   const toggleStep = (stepIndex) => {
@@ -33,7 +34,7 @@ export default function Task({task}) {
   return(
     <div className="taskContainer">
       <div className="taskName">
-        {taskState.title}<Progress pcent={pcentComplete(taskState)} />
+        {taskState.title}{manageMode ? <div>A</div> : <Progress pcent={pcentComplete(taskState)} />}
       </div>
       {taskState.steps.map((step, index) => {
         return(
