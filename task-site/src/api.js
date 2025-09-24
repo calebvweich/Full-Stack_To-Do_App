@@ -90,7 +90,7 @@ export async function getGroups() {
 
 // Delete Task
 export async function deleteTask(id) {
-  const res = await fetch (`${API_URL}/tasks/${id}`, {
+  const res = await fetch (`${API_URL}/tasks/task/${id}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -100,7 +100,7 @@ export async function deleteTask(id) {
 
 // Delete Group
 export async function deleteGroup(id) {
-  const res = await fetch (`${API_URL}/tasks/${id}`, {
+  const res = await fetch (`${API_URL}/tasks/group/${id}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`

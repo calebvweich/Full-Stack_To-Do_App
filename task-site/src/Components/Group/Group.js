@@ -1,12 +1,14 @@
 import "./Group.css"
 
 import Task from "../Task/Task"
+import Button from "../Button/Button"
 
-export default function Group({name, tasks, manageMode, statusOptions, taskDeletion}) {
+export default function Group({group, tasks, manageMode, statusOptions, taskDeletion}) {
   return(
     <div className="groupContainer">
       <div className="groupName">
-          {name}
+          {group.name}
+          {manageMode && <Button text={"A"} onClick={() => taskDeletion(group._id, "group")} />}
       </div>
       <div className="groupedTasks">
         {tasks.map((task, index) => {

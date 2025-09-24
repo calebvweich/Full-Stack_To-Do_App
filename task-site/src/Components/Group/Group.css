@@ -8,6 +8,8 @@
   color: #675858;
   text-align: left;
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
 }
 .groupedTasks {
   display: flex;

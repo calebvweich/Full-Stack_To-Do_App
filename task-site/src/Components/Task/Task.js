@@ -48,7 +48,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion}) {
             <div>{taskState.status}</div>
           }
         </div>
-        {manageMode ? <Button text={"A"} onClick={() => taskDeletion(taskState._id)} /> : <Progress pcent={pcentComplete(taskState)} />}
+        {manageMode ? <Button text={"A"} onClick={() => taskDeletion(taskState._id, "task")} /> : <Progress pcent={pcentComplete(taskState)} />}
       </div>
       {taskState.steps.map((step, index) => {
         return(

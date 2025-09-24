@@ -10,7 +10,7 @@ import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask'
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask } from '../../api';
+import { getTasks, getGroups, deleteTask, deleteGroup } from '../../api';
 
 export default function TaskPage() {
   // VARIABLES
@@ -36,9 +36,16 @@ export default function TaskPage() {
       setTasks(taskRes)
     }
   }
-  async function handleDeleteTask(id) {
-    deleteTask(id)
-    setTasks((prev) => prev.filter((task) => task._id !== id));
+  async function handleDelete(id, toDelete) {
+    if (toDelete === "task") {
+      deleteTask(id);
+      setTasks((prev) => prev.filter((task) => task._id !== id));
+    } else if (toDelete === "group") {
+      deleteGroup(id)
+      setGroups((prev) => prev.filter((group) => group._id !== id))
+    } else {
+      console.log("Step")
+    }
   }
 
   // useEffect to get tasks and groups
@@ -84,11 +91,11 @@ export default function TaskPage() {
           return(
             <Group
               key={index}
-              name={group.name}
+              group={group}
               tasks={tasks.filter(task => task.group === group.name)}
               manageMode={manageMode}
               statusOptions={statusOptions}
-              taskDeletion={handleDeleteTask}
+              taskDeletion={handleDelete}
             />
           )
         })}
@@ -99,7 +106,7 @@ export default function TaskPage() {
               task={task}
               manageMode={manageMode}
               statusOptions={statusOptions}
-              taskDeletion={handleDeleteTask}
+              taskDeletion={handleDelete}
             />
           )
         })}
