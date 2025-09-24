@@ -78,12 +78,23 @@ export default function TaskPage() {
       <div className="taskArea">
         {groups.map((group, index) => {
           return(
-            <Group key={index} name={group.name} tasks={tasks.filter(task => task.group === group.name)} manageMode={manageMode}/>
+            <Group
+              key={index}
+              name={group.name}
+              tasks={tasks.filter(task => task.group === group.name)}
+              manageMode={manageMode}
+              statusOptions={statusOptions}
+            />
           )
         })}
-        {tasks.filter(task => task.group === "none").map((task, index) => {
+        {tasks.filter(task => task.group === "None").map((task, index) => {
           return(
-            <Task key={index} task={task} manageMode={manageMode} />
+            <Task
+              key={index}
+              task={task}
+              manageMode={manageMode}
+              statusOptions={statusOptions}
+            />
           )
         })}
       </div>
