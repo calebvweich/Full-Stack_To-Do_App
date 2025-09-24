@@ -43,6 +43,9 @@ router.post("/newGroup", auth, async (req, res) => {
 router.get("/getTasks", auth, async (req, res) => {
   try {
     const userTasks = await task.find({ userId: req.user.id })
+    userTasks.forEach(task => {
+      task.steps.sort((a, b) => a.order - b.order)
+    })
     res.json(userTasks)
   } catch (err) {
     res.status(500).json({ msg: err.message })

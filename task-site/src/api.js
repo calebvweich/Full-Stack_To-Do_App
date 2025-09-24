@@ -29,6 +29,9 @@ export async function login(username, password) {
 // -----TASKS------
 // New Task
 export async function newTask(title, group, steps, dueDate) {
+  steps.forEach((step, index) => {
+    step.order = index
+  });
   const res = await fetch(`${API_URL}/tasks/newTask`, {
     method: "POST",
     headers: {

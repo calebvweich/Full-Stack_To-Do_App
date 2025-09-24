@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 
 const stepSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  completed: { type: Boolean, required: true, default: false }
+  text: { type: String, required: true },
+  completed: { type: Boolean, required: true, default: false },
+  order: { type: Number, required: true, default: false }
 })
 
 const taskSchema = new mongoose.Schema({

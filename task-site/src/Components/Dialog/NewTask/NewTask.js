@@ -29,7 +29,7 @@ function TaskForm({steps}) {
   }
 
   function addStep() {
-    steps.push({ "text": step, "completed": false});
+    steps.push({ "text": step, "completed": false });
     setStep("")
   }
 
@@ -70,7 +70,6 @@ function TaskForm({steps}) {
         <br/><label>Due Date</label><br/>
         <input
           type="date"
-          value={dueDate}
           onChange={(e) => (setDueDate(e.target.value))}
         />
         <br/><br/><br/><br/><button type="submit">Submit</button>
