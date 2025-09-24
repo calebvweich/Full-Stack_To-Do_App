@@ -2,7 +2,7 @@ import "./Group.css"
 
 import Task from "../Task/Task"
 
-export default function Group({name, tasks, manageMode, statusOptions}) {
+export default function Group({name, tasks, manageMode, statusOptions, taskDeletion}) {
   return(
     <div className="groupContainer">
       <div className="groupName">
@@ -16,6 +16,7 @@ export default function Group({name, tasks, manageMode, statusOptions}) {
               task={task}
               manageMode={manageMode}
               statusOptions={statusOptions}
+              taskDeletion={taskDeletion}
             />
           )
         })}

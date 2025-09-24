@@ -1,8 +1,10 @@
 import { useState } from "react";
 import "./Task.css"
 import Progress from "../Progress/Progress";
+import Button from "../Button/Button";
+import { deleteTask } from "../../api";
 
-export default function Task({task, manageMode, statusOptions}) {
+export default function Task({task, manageMode, statusOptions, taskDeletion}) {
   // Create local state for the task to enable re-rendering
   const [taskState, setTaskState] = useState(task);
 
@@ -46,7 +48,7 @@ export default function Task({task, manageMode, statusOptions}) {
             <div>{taskState.status}</div>
           }
         </div>
-        {manageMode ? <div>A</div> : <Progress pcent={pcentComplete(taskState)} />}
+        {manageMode ? <Button text={"A"} onClick={() => taskDeletion(taskState._id)} /> : <Progress pcent={pcentComplete(taskState)} />}
       </div>
       {taskState.steps.map((step, index) => {
         return(

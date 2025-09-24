@@ -63,23 +63,15 @@ router.get("/getGroups", auth, async (req, res) => {
 })
 
 // Delete Task
-router.delete("deleteTask", auth, async (req, res) => {
-  try {
-    const deleteId = req.body
-    await task.deleteOne({ _id: deleteId })
-  } catch (err) {
-    res.status(500).json({ msg: err.message })
-  }
-})
+router.delete('/:id', async (req, res) => {
+  await task.findByIdAndDelete(req.params.id);
+  res.json({ message: "Task deleted" });
+});
 
 // Delete Group
-router.delete("deleteGroup", auth, async (req, res) => {
-  try {
-    const deleteId = req.body
-    await group.deleteOne({ _id: deleteId })
-  } catch (err) {
-    res.status(500).json({ msg: err.message })
-  }
-})
+router.delete('/:id', async (req, res) => {
+  await group.findByIdAndDelete(req.params.id);
+  res.json({ message: "Group deleted" });
+});
 
 export default router;

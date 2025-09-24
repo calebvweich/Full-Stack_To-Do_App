@@ -90,23 +90,21 @@ export async function getGroups() {
 
 // Delete Task
 export async function deleteTask(id) {
-  const res = await fetch (`${API_URL}/tasks/deleteTask`, {
+  const res = await fetch (`${API_URL}/tasks/${id}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`
-    },
-    body: JSON.stringify({ deleteId: id })
+    }
   })
 }
 
 // Delete Group
 export async function deleteGroup(id) {
-  const res = await fetch (`${API_URL}/tasks/deleteGroup`, {
+  const res = await fetch (`${API_URL}/tasks/${id}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`
-    },
-    body: JSON.stringify({ deleteId: id })
+    }
   })
 }
 

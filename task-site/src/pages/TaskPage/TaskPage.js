@@ -10,7 +10,7 @@ import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask'
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups } from '../../api';
+import { getTasks, getGroups, deleteTask } from '../../api';
 
 export default function TaskPage() {
   // VARIABLES
@@ -35,6 +35,10 @@ export default function TaskPage() {
     if (taskRes) {
       setTasks(taskRes)
     }
+  }
+  async function handleDeleteTask(id) {
+    deleteTask(id)
+    setTasks((prev) => prev.filter((task) => task._id !== id));
   }
 
   // useEffect to get tasks and groups
@@ -84,6 +88,7 @@ export default function TaskPage() {
               tasks={tasks.filter(task => task.group === group.name)}
               manageMode={manageMode}
               statusOptions={statusOptions}
+              taskDeletion={handleDeleteTask}
             />
           )
         })}
@@ -94,6 +99,7 @@ export default function TaskPage() {
               task={task}
               manageMode={manageMode}
               statusOptions={statusOptions}
+              taskDeletion={handleDeleteTask}
             />
           )
         })}
