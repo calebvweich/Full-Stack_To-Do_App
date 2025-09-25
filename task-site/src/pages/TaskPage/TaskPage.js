@@ -11,12 +11,14 @@ import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask'
 // LIBRARIES
 import { useEffect, useState } from 'react';
 import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps } from '../../api';
+import { DeleteDialog, DeleteDialogHeader } from '../../Components/Dialog/Delete/Delete';
 
 export default function TaskPage() {
   // VARIABLES
   const [selectedGroup, setSelectedGroup] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("")
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [newDialogOpen, setNewDialogOpen] = useState(false)
+  const [delDialogOpen, setDelDialogOpen] = useState(false)
   const [dialogTab, setDialogTab] = useState("Task")
   const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
   const [manageMode, setManageMode] = useState(false)
@@ -91,7 +93,7 @@ export default function TaskPage() {
         <div className="newButton">
           Manage Tasks
           <div className="manageButtons">
-            <Button text={"New"} onClick={() => setDialogOpen(true)} />
+            <Button text={"New"} onClick={() => setNewDialogOpen(true)} />
             <Button text={"Manage"} onClick={() => setManageMode(!manageMode)} />
           </div>
         </div>
@@ -123,11 +125,18 @@ export default function TaskPage() {
           )
         })}
       </div>
-      {dialogOpen && (
+      {newDialogOpen && (
         <Dialog
-          close={() => setDialogOpen(false)}
+          close={() => setNewDialogOpen(false)}
           title={<NewTaskHeader tab={dialogTab} setTab={setDialogTab} />}
           content={<NewTask tab={dialogTab} />}
+        />
+      )}
+      {delDialogOpen && (
+        <Dialog
+          close={() => setDelDialogOpen(false)}
+          title={<DeleteDialogHeader />}
+          content={<DeleteDialog />}
         />
       )}
     </div>

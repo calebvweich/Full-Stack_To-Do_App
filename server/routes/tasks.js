@@ -63,13 +63,13 @@ router.get("/getGroups", auth, async (req, res) => {
 })
 
 // Delete Task
-router.delete('/task/:id', async (req, res) => {
+router.delete("/task/:id", async (req, res) => {
   await task.findByIdAndDelete(req.params.id);
   res.json({ message: "Task deleted" });
 });
 
 // Delete Group
-router.delete('/group/:id', async (req, res) => {
+router.delete("/group/:id", async (req, res) => {
   await group.findByIdAndDelete(req.params.id);
   res.json({ message: "Group deleted" });
 });
@@ -115,6 +115,21 @@ router.patch("/:taskId/steps/:stepId", async (req, res) => {
     currentStep.completed = !currentStep.completed
     currentTask.save()
     res.status(200)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "Server error" });
+  }
+})
+
+router.post("/:taskId/newStep", auth, async (req, res) => {
+  try {
+    const { taskId } = req.params
+    const { text } = req.body;
+    const currentTask = await task.findById(taskId);
+    const nextOrder = currentTask.steps.length;
+    currentTask.steps.push({ text: text, order: nextOrder });
+    currentTask.save();
+    res.status(200).json(currentTask);
   } catch (err) {
     console.log(err)
     res.status(500).json({ message: "Server error" });

@@ -128,6 +128,24 @@ export async function toggleStepCompletion(task, step) {
   })
 }
 
+// New Step
+export async function addStepToTask(task, newStep) {
+  const res = await fetch (`${API_URL}/tasks/${task}/newStep`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+     },
+    body: JSON.stringify({ text: newStep })
+  })
+  if (res.ok) {
+    const updatedTask = await res.json()
+    return updatedTask;
+  } else {
+    console.log(res)
+  }
+}
+
 // Get protected data
 export async function getProtected() {
   const token = localStorage.getItem("token");

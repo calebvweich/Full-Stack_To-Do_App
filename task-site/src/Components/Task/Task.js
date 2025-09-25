@@ -3,12 +3,13 @@ import "./Task.css"
 import Progress from "../Progress/Progress";
 import Button from "../Button/Button";
 import { useEffect } from "react";
-import { toggleStepCompletion } from "../../api";
+import { addStepToTask, toggleStepCompletion } from "../../api";
 
 export default function Task({task, manageMode, statusOptions, taskDeletion, onReorderSteps}) {
   // Create local state for the task to enable re-rendering
   const [taskState, setTaskState] = useState(task);
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const [newStep, setNewStep] = useState("")
 
   function handleDragStart(index) {
     setDraggedIndex(index);
@@ -31,7 +32,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
 
   // Handler function to toggle step completion
   async function toggleStep(stepIndex) {
-    toggleStepCompletion(task._id, task.steps[stepIndex]._id)
+    toggleStepCompletion(taskState._id, taskState.steps[stepIndex]._id)
     setTaskState(prevTask => ({
       ...prevTask,
       steps: prevTask.steps.map((step, index) => 
@@ -41,6 +42,12 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
       )
     }));
   };
+
+  async function addStep() {
+    const updatedTask = await addStepToTask(taskState._id, newStep)
+    setTaskState(updatedTask)
+    setNewStep("")
+  }
 
   function pcentComplete (task) {
     var done = 0
@@ -76,25 +83,32 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
         </div>
         {manageMode ? <Button text={"A"} onClick={() => taskDeletion(taskState._id, "task")} /> : <Progress pcent={pcentComplete(taskState)} />}
       </div>
-      <ul className="steps">
-        {taskState.steps.map((step, index) => {
-          return(
-            <div
-              key={index}
-              className="step"
-              onClick={() => toggleStep(index)}
-              draggable
-              onDragStart={() => handleDragStart(index)}
-              onDragOver={(e) => e.preventDefault()} // allow drop
-              onDrop={() => handleDrop(index)}
-            >
-              {step.text} 
-              <div className={step.completed ? "checked checkbox" : "checkbox"}/>
-            </div>
-          )
-        })}
-      </ul>
-      <div className="step" onClick={() => console.log("Add Step")}>Add New Step +</div>
+      {taskState.steps.map((step, index) => {
+        return(
+          <div
+            key={index}
+            className="step"
+            onClick={() => manageMode ? console.log("Hi") : toggleStep(index)}
+            draggable
+            onDragStart={() => handleDragStart(index)}
+            onDragOver={(e) => e.preventDefault()} // allow drop
+            onDrop={() => handleDrop(index)}
+          >
+            {step.text} 
+            <div className={step.completed ? "checked checkbox" : "checkbox"}/>
+          </div>
+        )
+      })}
+      <div
+        className="step"
+      >
+      <input
+        type="text"
+        value={newStep}
+        onChange={(e) => setNewStep(e.target.value)}
+      />
+      <button type="button" onClick={addStep}>+</button>
+      </div>
     </div>
   )
 }
