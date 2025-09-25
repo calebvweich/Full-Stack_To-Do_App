@@ -3,7 +3,7 @@ import "./Group.css"
 import Task from "../Task/Task"
 import Button from "../Button/Button"
 
-export default function Group({group, tasks, manageMode, statusOptions, taskDeletion}) {
+export default function Group({group, tasks, manageMode, statusOptions, taskDeletion, onReorderSteps}) {
   return(
     <div className="groupContainer">
       <div className="groupName">
@@ -19,6 +19,7 @@ export default function Group({group, tasks, manageMode, statusOptions, taskDele
               manageMode={manageMode}
               statusOptions={statusOptions}
               taskDeletion={taskDeletion}
+              onReorderSteps={onReorderSteps}
             />
           )
         })}

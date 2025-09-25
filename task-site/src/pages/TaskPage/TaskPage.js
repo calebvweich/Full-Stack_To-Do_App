@@ -10,7 +10,7 @@ import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask'
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup } from '../../api';
+import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps } from '../../api';
 
 export default function TaskPage() {
   // VARIABLES
@@ -18,7 +18,6 @@ export default function TaskPage() {
   const [selectedStatus, setSelectedStatus] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogTab, setDialogTab] = useState("Task")
-  const groupNames = []
   const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
   const [manageMode, setManageMode] = useState(false)
   // DB
@@ -46,6 +45,17 @@ export default function TaskPage() {
     } else {
       console.log("Step")
     }
+  }
+
+  async function handleReorder(taskId, newOrder) {
+    const newSteps = await reorderSteps(taskId, newOrder)
+    setTasks(prev => 
+      prev.map(task => 
+        task._id === taskId
+          ? { ...task, steps: newOrder.map(id => task.steps.find(s => s._id === id)) }
+          : task
+      )
+    )
   }
 
   // useEffect to get tasks and groups
@@ -96,6 +106,7 @@ export default function TaskPage() {
               manageMode={manageMode}
               statusOptions={statusOptions}
               taskDeletion={handleDelete}
+              onReorderSteps={handleReorder}
             />
           )
         })}
@@ -107,6 +118,7 @@ export default function TaskPage() {
               manageMode={manageMode}
               statusOptions={statusOptions}
               taskDeletion={handleDelete}
+              onReorderSteps={handleReorder}
             />
           )
         })}

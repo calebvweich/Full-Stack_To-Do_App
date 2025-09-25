@@ -108,6 +108,15 @@ export async function deleteGroup(id) {
   })
 }
 
+// Reorder Steps
+export async function reorderSteps(taskId, newOrder) {
+  const res = await fetch (`${API_URL}/tasks/${taskId}/steps/reorder`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ order: newOrder })
+  })
+}
+
 // Get protected data
 export async function getProtected() {
   const token = localStorage.getItem("token");

@@ -4,9 +4,30 @@ import Progress from "../Progress/Progress";
 import Button from "../Button/Button";
 import { deleteTask } from "../../api";
 
-export default function Task({task, manageMode, statusOptions, taskDeletion}) {
+export default function Task({task, manageMode, statusOptions, taskDeletion, onReorderSteps}) {
   // Create local state for the task to enable re-rendering
   const [taskState, setTaskState] = useState(task);
+  const [draggedIndex, setDraggedIndex] = useState(null);
+
+  const handleDragStart = (index) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDrop = (index) => {
+    if (draggedIndex === null) return;
+
+    // Copy steps
+    const newSteps = [...task.steps];
+    const [moved] = newSteps.splice(draggedIndex, 1);
+    newSteps.splice(index, 0, moved);
+
+    // Reset drag index
+    setDraggedIndex(null);
+
+    // Tell parent about new order
+    console.log(task)
+    onReorderSteps(task._id, newSteps.map((s) => s._id));
+  };
 
   // Handler function to toggle step completion
   const toggleStep = (stepIndex) => {
@@ -50,14 +71,24 @@ export default function Task({task, manageMode, statusOptions, taskDeletion}) {
         </div>
         {manageMode ? <Button text={"A"} onClick={() => taskDeletion(taskState._id, "task")} /> : <Progress pcent={pcentComplete(taskState)} />}
       </div>
-      {taskState.steps.map((step, index) => {
-        return(
-          <div key={index} className="step" onClick={() => toggleStep(index)}>
-            {step.text} 
-            <div className={step.completed ? "checked checkbox" : "checkbox"}/>
-          </div>
-        )
-      })}
+      <ul className="steps">
+        {taskState.steps.map((step, index) => {
+          return(
+            <div
+              key={index}
+              className="step"
+              onClick={() => toggleStep(index)}
+              draggable
+              onDragStart={() => handleDragStart(index)}
+              onDragOver={(e) => e.preventDefault()} // allow drop
+              onDrop={() => handleDrop(index)}
+            >
+              {step.text} 
+              <div className={step.completed ? "checked checkbox" : "checkbox"}/>
+            </div>
+          )
+        })}
+      </ul>
       <div className="step" onClick={() => console.log("Add Step")}>Add New Step +</div>
     </div>
   )

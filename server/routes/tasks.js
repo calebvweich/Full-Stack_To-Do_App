@@ -2,7 +2,6 @@ import express from "express";
 import task from "../models/task.js";
 import group from "../models/group.js";
 import { auth } from "../middleware/auth.js";
-import task from "../models/task.js";
 
 const router = express.Router();
 
@@ -78,23 +77,24 @@ router.delete('/group/:id', async (req, res) => {
 // Reorder Steps
 router.patch("/:taskId/steps/reorder", async (req, res) => {
   const { taskId } = req.params;
-  const { order } = req.body; // array of step IDs
+  const { order } = req.body;
 
   try {
-    const task = await Task.findById(taskId);
-    if (!task) return res.status(404).json({ message: "Task not found" });
+    const currentTask = await task.findById(taskId);
+    if (!currentTask) return res.status(404).json({ message: "Task not found" });
 
     // Reorder steps based on given array
-    const stepsMap = new Map(task.steps.map(step => [step._id.toString(), step]));
-    task.steps = order.map((id, index) => {
+    const stepsMap = new Map(currentTask.steps.map(step => [step._id.toString(), step]));
+    currentTask.steps = order.map((id, index) => {
       const step = stepsMap.get(id);
       if (step) step.order = index; // update order number
       return step;
     });
 
-    await task.save();
-    res.json(task.steps);
+    await currentTask.save();
+    res.json(currentTask.steps);
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 });
