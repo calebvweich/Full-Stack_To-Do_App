@@ -88,7 +88,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
           <div
             key={index}
             className="step"
-            onClick={() => manageMode ? console.log("Hi") : toggleStep(index)}
+            onClick={() => manageMode ? taskDeletion(step._id, "Step", taskState._id) : toggleStep(index)}
             draggable
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => e.preventDefault()} // allow drop

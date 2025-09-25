@@ -113,7 +113,7 @@ router.patch("/:taskId/steps/:stepId", async (req, res) => {
     const currentTask = await task.findById(taskId)
     const currentStep = currentTask.steps.id(stepId)
     currentStep.completed = !currentStep.completed
-    currentTask.save()
+    await currentTask.save()
     res.status(200)
   } catch (err) {
     console.log(err)
@@ -128,8 +128,21 @@ router.post("/:taskId/newStep", auth, async (req, res) => {
     const currentTask = await task.findById(taskId);
     const nextOrder = currentTask.steps.length;
     currentTask.steps.push({ text: text, order: nextOrder });
-    currentTask.save();
+    await currentTask.save();
     res.status(200).json(currentTask);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "Server error" });
+  }
+})
+
+router.delete("/:taskId/deleteStep/:stepId", auth, async (req, res) => {
+  try {
+    const { taskId, stepId } = req.params;
+    const currentTask = await task.findById(taskId)
+    currentTask.steps = currentTask.steps.filter(step => step._id != stepId)
+    await currentTask.save()
+    res.status(200);
   } catch (err) {
     console.log(err)
     res.status(500).json({ message: "Server error" });

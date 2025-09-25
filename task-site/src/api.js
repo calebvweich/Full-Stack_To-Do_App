@@ -108,6 +108,16 @@ export async function deleteGroup(id) {
   })
 }
 
+// Delete Step
+export async function deleteStep(task, step) {
+  const res = await fetch (`${API_URL}/tasks/${task}/deleteStep/${step}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
+  })
+}
+
 // Reorder Steps
 export async function reorderSteps(taskId, newOrder) {
   const res = await fetch (`${API_URL}/tasks/${taskId}/steps/reorder`, {

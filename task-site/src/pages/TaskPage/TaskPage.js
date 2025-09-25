@@ -7,11 +7,11 @@ import Task from '../../Components/Task/Task';
 import Group from '../../Components/Group/Group';
 import Dialog from '../../Components/Dialog/Dialog';
 import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask';
+import { DeleteDialog, DeleteDialogHeader } from '../../Components/Dialog/Delete/Delete';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps } from '../../api';
-import { DeleteDialog, DeleteDialogHeader } from '../../Components/Dialog/Delete/Delete';
+import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep } from '../../api';
 
 export default function TaskPage() {
   // VARIABLES
@@ -22,6 +22,7 @@ export default function TaskPage() {
   const [dialogTab, setDialogTab] = useState("Task")
   const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
   const [manageMode, setManageMode] = useState(false)
+  const [toDelete, setToDelete] = useState({})
   // DB
   const [tasks, setTasks] = useState([])
   const [groups, setGroups] = useState([])
@@ -37,7 +38,7 @@ export default function TaskPage() {
       setTasks(taskRes)
     }
   }
-  async function handleDelete(id, toDelete) {
+  async function handleDelete(id, toDelete, taskId) {
     if (toDelete === "task") {
       deleteTask(id);
       setTasks((prev) => prev.filter((task) => task._id !== id));
@@ -45,7 +46,17 @@ export default function TaskPage() {
       deleteGroup(id)
       setGroups((prev) => prev.filter((group) => group._id !== id))
     } else {
-      console.log("Step")
+      deleteStep(taskId, id)
+      setTasks(prev =>
+        prev.map(task =>
+          task._id === taskId
+          ? {
+            ...task,
+            steps: task.steps.filter(step => step._id !== id)
+            }
+          : task
+        )
+      )
     }
   }
 
