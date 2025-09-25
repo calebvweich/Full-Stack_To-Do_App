@@ -115,6 +115,17 @@ export async function reorderSteps(taskId, newOrder) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ order: newOrder })
   })
+  if (res.ok) {
+    const newSteps = await res.json()
+    return newSteps
+  }
+}
+
+// Toggle Step Completion
+export async function toggleStepCompletion(task, step) {
+  const res = await fetch (`${API_URL}/tasks/${task}/steps/${step}`, {
+    method: "PATCH"
+  })
 }
 
 // Get protected data

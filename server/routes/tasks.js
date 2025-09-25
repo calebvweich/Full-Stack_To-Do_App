@@ -76,27 +76,49 @@ router.delete('/group/:id', async (req, res) => {
 
 // Reorder Steps
 router.patch("/:taskId/steps/reorder", async (req, res) => {
-  const { taskId } = req.params;
-  const { order } = req.body;
-
   try {
-    const currentTask = await task.findById(taskId);
-    if (!currentTask) return res.status(404).json({ message: "Task not found" });
+    const { taskId } = req.params;
+    const { order } = req.body; // array of stepIds in new order
 
-    // Reorder steps based on given array
-    const stepsMap = new Map(currentTask.steps.map(step => [step._id.toString(), step]));
-    currentTask.steps = order.map((id, index) => {
-      const step = stepsMap.get(id);
-      if (step) step.order = index; // update order number
-      return step;
+    const currentTask = await task.findById(taskId);
+    if (!task) return res.status(404).json({ message: "Task not found" });
+
+    // update each step's order
+    order.forEach((stepId, index) => {
+      const step = currentTask.steps.id(stepId);
+      if (step) {
+        step.order = index;
+      }
     });
 
     await currentTask.save();
-    res.json(currentTask.steps);
+
+    // return fresh array of plain objects with string _id
+    const steps = currentTask.steps
+      .sort((a, b) => a.order - b.order)
+      .map(step => ({
+        ...step.toObject(),
+        _id: step._id.toString()
+      }));
+
+    res.status(200).json(steps);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: "Server error" });
   }
 });
+
+router.patch("/:taskId/steps/:stepId", async (req, res) => {
+  try {
+    const { taskId, stepId } = req.params;
+    const currentTask = await task.findById(taskId)
+    const currentStep = currentTask.steps.id(stepId)
+    currentStep.completed = !currentStep.completed
+    currentTask.save()
+    res.status(200)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "Server error" });
+  }
+})
 
 export default router;

@@ -53,17 +53,17 @@ function TaskForm({steps}) {
           onChange={(e) => setStep(e.target.value)}
         />
         <button type="button" onClick={addStep}>+</button>
-        {steps.map((step, index) => {
+        {steps.map((step) => {
           return(
-            <label key={index}><br/>{step.text}</label>
+            <label key={step._id}><br/>{step.text}</label>
           )}
         )}
         <br/><label>Group</label><br/>
         <select id="groups" name="groups" onChange={(e) => setGroup(e.target.value)}>
           <option value="None">None</option>
-          {groupList.map((group, index) => {
+          {groupList.map((group) => {
             return(
-              <option value={group.name} key={index}>{group.name}</option>
+              <option value={group.name} key={group._id}>{group.name}</option>
             )
           })}
         </select>

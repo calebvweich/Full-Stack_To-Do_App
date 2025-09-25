@@ -11,10 +11,10 @@ export default function Group({group, tasks, manageMode, statusOptions, taskDele
           {manageMode && <Button text={"A"} onClick={() => taskDeletion(group._id, "group")} />}
       </div>
       <div className="groupedTasks">
-        {tasks.map((task, index) => {
+        {tasks ? tasks.map((task) => {
           return(
             <Task
-              key={index}
+              key={task._id}
               task={task}
               manageMode={manageMode}
               statusOptions={statusOptions}
@@ -22,7 +22,10 @@ export default function Group({group, tasks, manageMode, statusOptions, taskDele
               onReorderSteps={onReorderSteps}
             />
           )
-        })}
+        })
+          :
+          <div>None</div>
+        }
       </div>
     </div>
   )

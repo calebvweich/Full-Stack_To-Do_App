@@ -2,22 +2,23 @@ import { useState } from "react";
 import "./Task.css"
 import Progress from "../Progress/Progress";
 import Button from "../Button/Button";
-import { deleteTask } from "../../api";
+import { useEffect } from "react";
+import { toggleStepCompletion } from "../../api";
 
 export default function Task({task, manageMode, statusOptions, taskDeletion, onReorderSteps}) {
   // Create local state for the task to enable re-rendering
   const [taskState, setTaskState] = useState(task);
   const [draggedIndex, setDraggedIndex] = useState(null);
 
-  const handleDragStart = (index) => {
+  function handleDragStart(index) {
     setDraggedIndex(index);
   };
 
-  const handleDrop = (index) => {
+  function handleDrop(index) {
     if (draggedIndex === null) return;
 
-    // Copy steps
-    const newSteps = [...task.steps];
+    // Copy steps from current local state
+    const newSteps = [...taskState.steps];
     const [moved] = newSteps.splice(draggedIndex, 1);
     newSteps.splice(index, 0, moved);
 
@@ -25,12 +26,12 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
     setDraggedIndex(null);
 
     // Tell parent about new order
-    console.log(task)
     onReorderSteps(task._id, newSteps.map((s) => s._id));
   };
 
   // Handler function to toggle step completion
-  const toggleStep = (stepIndex) => {
+  async function toggleStep(stepIndex) {
+    toggleStepCompletion(task._id, task.steps[stepIndex]._id)
     setTaskState(prevTask => ({
       ...prevTask,
       steps: prevTask.steps.map((step, index) => 
@@ -52,6 +53,10 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
     });
     return(done/total * 100)
   }
+
+  useEffect(() => {
+    setTaskState(task);
+  }, [task]);
 
   return(
     <div className="taskContainer">

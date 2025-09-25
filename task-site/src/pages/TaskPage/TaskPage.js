@@ -49,10 +49,10 @@ export default function TaskPage() {
 
   async function handleReorder(taskId, newOrder) {
     const newSteps = await reorderSteps(taskId, newOrder)
-    setTasks(prev => 
-      prev.map(task => 
+    setTasks(prev =>
+      prev.map(task =>
         task._id === taskId
-          ? { ...task, steps: newOrder.map(id => task.steps.find(s => s._id === id)) }
+          ? { ...task, steps: [...newSteps] } // new array reference
           : task
       )
     )
@@ -70,9 +70,9 @@ export default function TaskPage() {
           <div className="filterType">
             Group Name
             <div className="filters">
-              {groups.map((group, index) => {
+              {groups.map((group) => {
                 return(
-                  <Button key={index} text={group.name} onClick={() => setSelectedGroup(group.name)} />
+                  <Button key={group._id} text={group.name} onClick={() => setSelectedGroup(group.name)} />
                 )
               })}
             </div>
@@ -97,10 +97,10 @@ export default function TaskPage() {
         </div>
       </div>
       <div className="taskArea">
-        {groups.map((group, index) => {
+        {groups.map((group) => {
           return(
             <Group
-              key={index}
+              key={group._id}
               group={group}
               tasks={tasks.filter(task => task.group === group.name)}
               manageMode={manageMode}
@@ -110,10 +110,10 @@ export default function TaskPage() {
             />
           )
         })}
-        {tasks.filter(task => task.group === "None").map((task, index) => {
+        {tasks.filter(task => task.group === "None").map((task) => {
           return(
             <Task
-              key={index}
+              key={task._id}
               task={task}
               manageMode={manageMode}
               statusOptions={statusOptions}
