@@ -60,7 +60,7 @@ function TaskForm({steps}) {
         )}
         <br/><label>Group</label><br/>
         <select id="groups" name="groups" onChange={(e) => setGroup(e.target.value)}>
-          <option value="none">None</option>
+          <option value="None">None</option>
           {groupList.map((group, index) => {
             return(
               <option value={group.name} key={index}>{group.name}</option>
