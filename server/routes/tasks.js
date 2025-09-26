@@ -71,6 +71,12 @@ router.delete("/task/:id", async (req, res) => {
 
 // Delete Group
 router.delete("/group/:id", async (req, res) => {
+  const currentGroup = await group.findById(req.params.id)
+  const currentTasks = await task.find({ "group": { $eq: currentGroup.name }})
+  currentTasks.forEach(async toDel => {
+    console.log(toDel)
+    await task.findByIdAndDelete(toDel._id)
+  })
   await group.findByIdAndDelete(req.params.id);
   res.json({ message: "Group deleted" });
 });
