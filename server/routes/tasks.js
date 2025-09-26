@@ -8,10 +8,11 @@ const router = express.Router();
 // New Task
 router.post("/newTask", auth, async (req, res) => {
   try {
-    const { title, group, steps, dueDate } = req.body;
+    console.log(req.body)
+    const { name, group, steps, dueDate } = req.body;
     const newTask = new task({
       userId: req.user.id,
-      title: title,
+      name: name,
       status: "Not-Started",
       group: group,
       steps: steps,
@@ -124,10 +125,10 @@ router.patch("/:taskId/steps/:stepId", async (req, res) => {
 router.post("/:taskId/newStep", auth, async (req, res) => {
   try {
     const { taskId } = req.params
-    const { text } = req.body;
+    const { name } = req.body;
     const currentTask = await task.findById(taskId);
     const nextOrder = currentTask.steps.length;
-    currentTask.steps.push({ text: text, order: nextOrder });
+    currentTask.steps.push({ name: name, order: nextOrder });
     await currentTask.save();
     res.status(200).json(currentTask);
   } catch (err) {

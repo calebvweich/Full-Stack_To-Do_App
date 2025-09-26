@@ -1,13 +1,26 @@
+import Button from "../../Button/Button"
 import "./Delete.css"
 
-export function DeleteDialogHeader() {
+export function DeleteDialogHeader({ toDelete }) {
   return(
-    <div>Delete</div>
+    <div>Delete {toDelete.type} {toDelete.object.name}?</div>
   )
 }
 
-export function DeleteDialog() {
+export function DeleteDialog({ toDelete, handleDelete, close }) {
+  function deleteObject() {
+    handleDelete(toDelete.object._id, toDelete.type, toDelete.extra)
+    close()
+  }
   return(
-    <div>Are you sure?</div>
+    <div>
+      <div>
+        Are you sure you want to delete this {toDelete.type}?<br/>
+        This action cannot be undone.
+      </div>
+      <div>
+        <Button text={"Delete"} onClick={() => deleteObject()} />
+      </div>
+    </div>
   )
 }

@@ -2,13 +2,18 @@ import "./Group.css"
 
 import Task from "../Task/Task"
 import Button from "../Button/Button"
+import { useState } from "react"
+import Dialog from "../Dialog/Dialog"
+import { DeleteDialog, DeleteDialogHeader } from "../Dialog/Delete/Delete"
 
 export default function Group({group, tasks, manageMode, statusOptions, taskDeletion, onReorderSteps}) {
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [deleteInfo, setDeleteInfo] = useState(null)
   return(
     <div className="groupContainer">
       <div className="groupName">
           {group.name}
-          {manageMode && <Button text={"A"} onClick={() => taskDeletion(group._id, "group")} />}
+          {manageMode && <Button text={"A"} onClick={() => setDeleteInfo({"object": group, "type": "group", "extra": null})} />}
       </div>
       <div className="groupedTasks">
         {tasks ? tasks.map((task) => {
@@ -27,6 +32,13 @@ export default function Group({group, tasks, manageMode, statusOptions, taskDele
           <div>None</div>
         }
       </div>
+      {deleteInfo &&
+        <Dialog
+          close={() => setDeleteInfo(null)}
+          title={<DeleteDialogHeader toDelete={deleteInfo} />}
+          content={<DeleteDialog toDelete={deleteInfo} handleDelete={taskDeletion} close={() => setDeleteInfo(false)} />}
+        />
+      }
     </div>
   )
 }

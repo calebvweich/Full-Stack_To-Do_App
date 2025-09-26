@@ -4,12 +4,15 @@ import Progress from "../Progress/Progress";
 import Button from "../Button/Button";
 import { useEffect } from "react";
 import { addStepToTask, toggleStepCompletion } from "../../api";
+import Dialog from "../Dialog/Dialog";
+import { DeleteDialog, DeleteDialogHeader } from "../Dialog/Delete/Delete";
 
 export default function Task({task, manageMode, statusOptions, taskDeletion, onReorderSteps}) {
   // Create local state for the task to enable re-rendering
   const [taskState, setTaskState] = useState(task);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [newStep, setNewStep] = useState("")
+  const [deleteInfo, setDeleteInfo] = useState(null)
 
   function handleDragStart(index) {
     setDraggedIndex(index);
@@ -69,7 +72,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
     <div className="taskContainer">
       <div className="taskName">
         <div>
-          <div>{taskState.title}</div>
+          <div>{taskState.name}</div>
           {manageMode ? 
             <select>
               {statusOptions.map((option, index) => {
@@ -81,20 +84,20 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
             <div>{taskState.status}</div>
           }
         </div>
-        {manageMode ? <Button text={"A"} onClick={() => taskDeletion(taskState._id, "task")} /> : <Progress pcent={pcentComplete(taskState)} />}
+        {manageMode ? <Button text={"A"} onClick={() => setDeleteInfo({"object": taskState, type: "task"})} /> : <Progress pcent={pcentComplete(taskState)} />}
       </div>
       {taskState.steps.map((step, index) => {
         return(
           <div
             key={index}
             className="step"
-            onClick={() => manageMode ? taskDeletion(step._id, "Step", taskState._id) : toggleStep(index)}
+            onClick={() => manageMode ? setDeleteInfo({"object": step, type: "step", extra: taskState._id}) : toggleStep(index)}
             draggable
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => e.preventDefault()} // allow drop
             onDrop={() => handleDrop(index)}
           >
-            {step.text} 
+            {step.name} 
             <div className={step.completed ? "checked checkbox" : "checkbox"}/>
           </div>
         )
@@ -109,6 +112,13 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
       />
       <button type="button" onClick={addStep}>+</button>
       </div>
+      {deleteInfo &&
+        <Dialog
+          close={() => setDeleteInfo(false)}
+          title={<DeleteDialogHeader toDelete={deleteInfo} />}
+          content={<DeleteDialog toDelete={deleteInfo} handleDelete={taskDeletion} close={() => setDeleteInfo(false)} />}
+        />
+      }
     </div>
   )
 }

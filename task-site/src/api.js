@@ -28,7 +28,7 @@ export async function login(username, password) {
 
 // -----TASKS------
 // New Task
-export async function newTask(title, group, steps, dueDate) {
+export async function newTask(name, group, steps, dueDate) {
   steps.forEach((step, index) => {
     step.order = index
   });
@@ -38,7 +38,7 @@ export async function newTask(title, group, steps, dueDate) {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${localStorage.getItem("token")}`
     },
-    body: JSON.stringify({ title, group, steps, dueDate })
+    body: JSON.stringify({ name, group, steps, dueDate })
   });
   const data = await res.json();
 
@@ -146,7 +146,7 @@ export async function addStepToTask(task, newStep) {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${localStorage.getItem("token")}`
      },
-    body: JSON.stringify({ text: newStep })
+    body: JSON.stringify({ name: newStep })
   })
   if (res.ok) {
     const updatedTask = await res.json()

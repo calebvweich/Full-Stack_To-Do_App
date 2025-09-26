@@ -2,28 +2,28 @@
   {
     "_id": "64fe9d...",
     "userId": "u123",
-    "title": "Frontend",
+    "name": "Frontend",
     "status": "in_progress",
     "group": "group123",
     "steps": [
-      { "text": "Header", "completed": false },
-      { "text": "Tasks", "completed": false },
-      { "text": "Groups", "completed": false }
+      { "name": "Header", "completed": false },
+      { "name": "Tasks", "completed": false },
+      { "name": "Groups", "completed": false }
     ],
     "dueDate": "2025-09-30T00:00:00Z"
   },
   {
     "_id": "64fg9d...",
     "userId": "u123",
-    "title": "Backend",
+    "name": "Backend",
     "status": "Not Started",
     "group": "group123",
     "steps": [
-      { "text": "Create", "completed": false },
-      { "text": "Read", "completed": false },
-      { "text": "Update", "completed": false },
-      { "text": "Delete", "completed": false },
-      { "text": "Auth", "completed": false}
+      { "name": "Create", "completed": false },
+      { "name": "Read", "completed": false },
+      { "name": "Update", "completed": false },
+      { "name": "Delete", "completed": false },
+      { "name": "Auth", "completed": false}
     ],
     "dueDate": "2025-09-30T00:00:00Z"
   }

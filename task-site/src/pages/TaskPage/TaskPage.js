@@ -7,7 +7,6 @@ import Task from '../../Components/Task/Task';
 import Group from '../../Components/Group/Group';
 import Dialog from '../../Components/Dialog/Dialog';
 import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask';
-import { DeleteDialog, DeleteDialogHeader } from '../../Components/Dialog/Delete/Delete';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
@@ -17,12 +16,10 @@ export default function TaskPage() {
   // VARIABLES
   const [selectedGroup, setSelectedGroup] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("")
-  const [newDialogOpen, setNewDialogOpen] = useState(false)
-  const [delDialogOpen, setDelDialogOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogTab, setDialogTab] = useState("Task")
   const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
   const [manageMode, setManageMode] = useState(false)
-  const [toDelete, setToDelete] = useState({})
   // DB
   const [tasks, setTasks] = useState([])
   const [groups, setGroups] = useState([])
@@ -104,7 +101,7 @@ export default function TaskPage() {
         <div className="newButton">
           Manage Tasks
           <div className="manageButtons">
-            <Button text={"New"} onClick={() => setNewDialogOpen(true)} />
+            <Button text={"New"} onClick={() => setDialogOpen(true)} />
             <Button text={"Manage"} onClick={() => setManageMode(!manageMode)} />
           </div>
         </div>
@@ -136,18 +133,11 @@ export default function TaskPage() {
           )
         })}
       </div>
-      {newDialogOpen && (
+      {dialogOpen && (
         <Dialog
-          close={() => setNewDialogOpen(false)}
+          close={() => setDialogOpen(false)}
           title={<NewTaskHeader tab={dialogTab} setTab={setDialogTab} />}
           content={<NewTask tab={dialogTab} />}
-        />
-      )}
-      {delDialogOpen && (
-        <Dialog
-          close={() => setDelDialogOpen(false)}
-          title={<DeleteDialogHeader />}
-          content={<DeleteDialog />}
         />
       )}
     </div>

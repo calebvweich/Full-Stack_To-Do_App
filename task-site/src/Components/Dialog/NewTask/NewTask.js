@@ -3,7 +3,7 @@ import "./NewTask.css"
 import { newGroup, newTask, getGroups } from "../../../api"
 
 function TaskForm({steps}) {
-  const [title, setTitle] = useState("")
+  const [name, setName] = useState("")
   const [step, setStep] = useState("")
   const [group, setGroup] = useState("None")
   const [dueDate, setDueDate] = useState(null)
@@ -20,7 +20,7 @@ function TaskForm({steps}) {
   }
 
   async function handleSubmit() {
-    const res = await newTask(title,group,steps,dueDate);
+    const res = await newTask(name,group,steps,dueDate);
     if (res) {
       console.log(res)
     } else {
@@ -29,7 +29,7 @@ function TaskForm({steps}) {
   }
 
   function addStep() {
-    steps.push({ "text": step, "completed": false });
+    steps.push({ "name": step, "completed": false });
     setStep("")
   }
 
@@ -43,8 +43,8 @@ function TaskForm({steps}) {
         <label>Title</label><br/>
         <input
           type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <br/><label>Steps</label><br/>
         <input
@@ -55,7 +55,7 @@ function TaskForm({steps}) {
         <button type="button" onClick={addStep}>+</button>
         {steps.map((step) => {
           return(
-            <label key={step._id}><br/>{step.text}</label>
+            <label key={step._id}><br/>{step.name}</label>
           )}
         )}
         <br/><label>Group</label><br/>
