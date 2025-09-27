@@ -106,22 +106,24 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
         </div>
         {manageMode ? <Button text={"A"} onClick={() => setDeleteInfo({"object": taskState, type: "task"})} /> : <Progress pcent={pcentComplete(taskState)} />}
       </div>
-      {taskState.steps.map((step, index) => {
-        return(
-          <div
-            key={index}
-            className="step"
-            onClick={() => manageMode ? setDeleteInfo({"object": step, type: "step", extra: taskState._id}) : toggleStep(index)}
-            draggable
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={(e) => e.preventDefault()} // allow drop
-            onDrop={(e) => handleDrop(e, index)}
-          >
-            {step.name} 
-            <div className={step.completed ? "checked checkbox" : "checkbox"}/>
-          </div>
-        )
-      })}
+      <div className="stepsList">
+        {taskState.steps.map((step, index) => {
+          return(
+            <div
+              key={index}
+              className="step"
+              onClick={() => manageMode ? setDeleteInfo({"object": step, type: "step", extra: taskState._id}) : toggleStep(index)}
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={(e) => e.preventDefault()} // allow drop
+              onDrop={(e) => handleDrop(e, index)}
+            >
+              {step.name} 
+              <div className={step.completed ? "checked checkbox" : "checkbox"}/>
+            </div>
+          )
+        })}
+      </div>
       <div className="step">
         <input
           type="text"

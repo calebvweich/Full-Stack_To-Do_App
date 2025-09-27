@@ -73,7 +73,6 @@ router.delete("/group/:id", async (req, res) => {
   const currentGroup = await group.findById(req.params.id)
   const currentTasks = await task.find({ "group": { $eq: currentGroup.name }})
   currentTasks.forEach(async toDel => {
-    console.log(toDel)
     await task.findByIdAndDelete(toDel._id)
   })
   await group.findByIdAndDelete(req.params.id);
@@ -165,6 +164,7 @@ router.post("/:taskId/newStep", auth, async (req, res) => {
     const currentTask = await task.findById(taskId);
     const nextOrder = currentTask.steps.length;
     currentTask.steps.push({ name: name, order: nextOrder });
+    currentTask.steps.sort((a, b) => a.order - b.order)
     await currentTask.save();
     res.status(200).json(currentTask);
   } catch (err) {
@@ -173,6 +173,7 @@ router.post("/:taskId/newStep", auth, async (req, res) => {
   }
 })
 
+//Delete Step
 router.delete("/:taskId/deleteStep/:stepId", auth, async (req, res) => {
   try {
     const { taskId, stepId } = req.params;

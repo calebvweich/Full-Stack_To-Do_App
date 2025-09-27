@@ -1,10 +1,10 @@
 .taskContainer {
   width: fit-content;
-  min-width: 200px;
-  height: fit-content;
+  min-width: 300px;
   padding: 2rem;
   background: #EDE7DA;
   border-radius: 25px;
+  max-height: 100%;
 }
 .taskName {
   font-size: 20px;
@@ -14,11 +14,15 @@
   width: 100%;
   justify-content: space-between;
 }
+.stepsList {
+  max-height: 90%;
+  overflow-y: auto;
+}
 .step {
   display: flex;
-  width: 100%;
+  width: 96%;
   justify-content: space-between;
-  padding: .4rem;
+  padding: 2%;
 }
 .step:hover {
   background-color: #D9D5C9;
@@ -32,7 +36,4 @@
   height: .6rem;
   border: 2px solid gray;
   border-radius: .4rem;
-}
-input {
-  max-width: 80%;
 }

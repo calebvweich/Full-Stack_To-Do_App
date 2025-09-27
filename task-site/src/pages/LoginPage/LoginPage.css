@@ -2,14 +2,14 @@
   background: #D9D5C9;
   display: block;
   justify-self: center;
-  width: 30%;
-  height: 40%;
   min-width: 600px;
+  min-height: 300px;
   padding: 2rem;
   border-radius: 25px;
-  margin-top: 5rem;
   font-size: 24px;
   color: #675858;
+  position: absolute;
+  top: 20%;
 }
 .loginHeader {
   padding-bottom: 1rem;
