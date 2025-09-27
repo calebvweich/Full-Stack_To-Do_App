@@ -15,7 +15,7 @@
   justify-content: space-between;
 }
 .stepsList {
-  max-height: 90%;
+  max-height: 85%;
   overflow-y: auto;
 }
 .step {
