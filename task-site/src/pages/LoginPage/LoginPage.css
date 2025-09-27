@@ -2,7 +2,7 @@
   background: #D9D5C9;
   display: block;
   justify-self: center;
-  min-width: 600px;
+  min-width: 20%;
   min-height: 300px;
   padding: 2rem;
   border-radius: 25px;
@@ -10,6 +10,8 @@
   color: #675858;
   position: absolute;
   top: 20%;
+  left: clamp(0, calc(10vw - 10%), 30%);
+  right: clamp(0, calc(10vw - 10%), 30%);
 }
 .loginHeader {
   padding-bottom: 1rem;

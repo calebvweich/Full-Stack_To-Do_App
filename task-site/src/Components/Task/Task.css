@@ -37,3 +37,6 @@
   border: 2px solid gray;
   border-radius: .4rem;
 }
+input {
+  width: 80%;
+}
