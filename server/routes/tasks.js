@@ -8,7 +8,6 @@ const router = express.Router();
 // New Task
 router.post("/newTask", auth, async (req, res) => {
   try {
-    console.log(req.body)
     const { name, group, steps, dueDate } = req.body;
     const newTask = new task({
       userId: req.user.id,
