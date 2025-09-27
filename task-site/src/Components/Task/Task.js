@@ -3,7 +3,7 @@ import "./Task.css"
 import Progress from "../Progress/Progress";
 import Button from "../Button/Button";
 import { useEffect } from "react";
-import { addStepToTask, toggleStepCompletion } from "../../api";
+import { addStepToTask, setTaskStatus, toggleStepCompletion } from "../../api";
 import Dialog from "../Dialog/Dialog";
 import { DeleteDialog, DeleteDialogHeader } from "../Dialog/Delete/Delete";
 
@@ -49,6 +49,14 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
     }));
   };
 
+  // set new task status
+  async function updateStatus(newStatus) {
+    setTaskStatus(taskState._id, newStatus);
+    setTaskState(prevTask => ({
+      ...prevTask, status: newStatus
+    }))
+  }
+
   function handleTaskDragStart(e) {
     e.dataTransfer.setData("type", "task");
     e.dataTransfer.setData("taskId", taskState._id);
@@ -86,7 +94,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
         <div>
           <div>{taskState.name}</div>
           {manageMode ? 
-            <select>
+            <select onChange={(e) => updateStatus(e.target.value)}>
               {statusOptions.map((option, index) => {
                 return(
                   <option key={index} selected={option === taskState.status} value={option}>{option}</option>

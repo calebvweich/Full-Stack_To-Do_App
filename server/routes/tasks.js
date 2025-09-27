@@ -128,6 +128,7 @@ router.patch("/:taskId/steps/reorder", async (req, res) => {
   }
 });
 
+// Toggle step stepId completion
 router.patch("/:taskId/steps/:stepId", async (req, res) => {
   try {
     const { taskId, stepId } = req.params;
@@ -142,6 +143,22 @@ router.patch("/:taskId/steps/:stepId", async (req, res) => {
   }
 })
 
+// Change task taskId status
+router.patch("/:taskId/status", auth, async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const { newStatus } = req.body
+    const currentTask = await task.findById(taskId);
+    currentTask.status = newStatus
+    await currentTask.save()
+    res.status(200)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "Server error" });
+  }
+})
+
+// New step in task taskId
 router.post("/:taskId/newStep", auth, async (req, res) => {
   try {
     const { taskId } = req.params

@@ -152,6 +152,18 @@ export async function toggleStepCompletion(task, step) {
   })
 }
 
+// Change task Status
+export async function setTaskStatus(taskId, newStatus) {
+  const res = await fetch (`${API_URL}/tasks/${taskId}/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: JSON.stringify({ newStatus: newStatus})
+  })
+}
+
 // New Step
 export async function addStepToTask(task, newStep) {
   const res = await fetch (`${API_URL}/tasks/${task}/newStep`, {
@@ -159,7 +171,7 @@ export async function addStepToTask(task, newStep) {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${localStorage.getItem("token")}`
-     },
+    },
     body: JSON.stringify({ name: newStep })
   })
   if (res.ok) {
