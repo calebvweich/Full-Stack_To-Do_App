@@ -118,6 +118,20 @@ export async function deleteStep(task, step) {
   })
 }
 
+// Reorder Tasks
+export async function reorderTasks(groupId, taskId) {
+  const res = await fetch (`${API_URL}/tasks/${groupId}/reorder/${taskId}`, {
+    method: "PATCH",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
+  })
+  if (res.ok) {
+    const newTask = await res.json()
+    return newTask;
+  }
+}
+
 // Reorder Steps
 export async function reorderSteps(taskId, newOrder) {
   const res = await fetch (`${API_URL}/tasks/${taskId}/steps/reorder`, {

@@ -6,11 +6,18 @@ import { useState } from "react"
 import Dialog from "../Dialog/Dialog"
 import { DeleteDialog, DeleteDialogHeader } from "../Dialog/Delete/Delete"
 
-export default function Group({group, tasks, manageMode, statusOptions, taskDeletion, onReorderSteps}) {
+export default function Group({group, tasks, manageMode, statusOptions, taskDeletion, onReorderSteps, onTaskDrop}) {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [deleteInfo, setDeleteInfo] = useState(null)
+  const handleDrop = (type, taskId) => {
+    onTaskDrop(type, taskId, group.name);
+  };
   return(
-    <div className="groupContainer">
+    <div
+      className="groupContainer"
+      onDrop={e => handleDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"))}
+      onDragOver={e => e.preventDefault()}
+    >
       <div className="groupName">
           {group.name}
           {manageMode && <Button text={"A"} onClick={() => setDeleteInfo({"object": group, "type": "group", "extra": null})} />}

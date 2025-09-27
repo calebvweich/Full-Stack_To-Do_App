@@ -81,6 +81,20 @@ router.delete("/group/:id", async (req, res) => {
   res.json({ message: "Group deleted" });
 });
 
+// Reorder Tasks
+router.patch("/:groupName/reorder/:taskId", async (req, res) => {
+  try {
+    const { groupName, taskId } = req.params;
+    const currentTask = await task.findById(taskId);
+    currentTask.group = groupName;
+    await currentTask.save();
+    res.status(200).json(groupName);
+    // delete task, push task to group
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+})
+
 // Reorder Steps
 router.patch("/:taskId/steps/reorder", async (req, res) => {
   try {

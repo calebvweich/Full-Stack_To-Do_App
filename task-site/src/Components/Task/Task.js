@@ -14,23 +14,26 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
   const [newStep, setNewStep] = useState("")
   const [deleteInfo, setDeleteInfo] = useState(null)
 
-  function handleDragStart(index) {
-    setDraggedIndex(index);
+  // Step drag
+  function handleDragStart(e, index) {
+    e.stopPropagation();
+    e.dataTransfer.setData("type", "step");
+    e.dataTransfer.setData("stepIndex", index);
   };
 
-  function handleDrop(index) {
-    if (draggedIndex === null) return;
+  // Step Drop
+  function handleDrop(e, index) {
+    const type = e.dataTransfer.getData("type")
+    if (type === "step") {
+      const newIndex = e.dataTransfer.getData("stepIndex")
+      // Copy steps from current local state
+      const newSteps = [...taskState.steps];
+      const [moved] = newSteps.splice(newIndex, 1);
+      newSteps.splice(index, 0, moved);
 
-    // Copy steps from current local state
-    const newSteps = [...taskState.steps];
-    const [moved] = newSteps.splice(draggedIndex, 1);
-    newSteps.splice(index, 0, moved);
-
-    // Reset drag index
-    setDraggedIndex(null);
-
-    // Tell parent about new order
-    onReorderSteps(task._id, newSteps.map((s) => s._id));
+      // Tell parent about new order
+      onReorderSteps(task._id, newSteps.map((s) => s._id));
+    }
   };
 
   // Handler function to toggle step completion
@@ -44,6 +47,11 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
           : step
       )
     }));
+  };
+
+  function handleTaskDragStart(e) {
+    e.dataTransfer.setData("type", "task");
+    e.dataTransfer.setData("taskId", taskState._id);
   };
 
   async function addStep() {
@@ -69,7 +77,11 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
   }, [task]);
 
   return(
-    <div className="taskContainer">
+    <div
+      className="taskContainer"
+      draggable
+      onDragStart={handleTaskDragStart}
+    >
       <div className="taskName">
         <div>
           <div>{taskState.name}</div>
@@ -93,24 +105,22 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
             className="step"
             onClick={() => manageMode ? setDeleteInfo({"object": step, type: "step", extra: taskState._id}) : toggleStep(index)}
             draggable
-            onDragStart={() => handleDragStart(index)}
+            onDragStart={(e) => handleDragStart(e, index)}
             onDragOver={(e) => e.preventDefault()} // allow drop
-            onDrop={() => handleDrop(index)}
+            onDrop={(e) => handleDrop(e, index)}
           >
             {step.name} 
             <div className={step.completed ? "checked checkbox" : "checkbox"}/>
           </div>
         )
       })}
-      <div
-        className="step"
-      >
-      <input
-        type="text"
-        value={newStep}
-        onChange={(e) => setNewStep(e.target.value)}
-      />
-      <button type="button" onClick={addStep}>+</button>
+      <div className="step">
+        <input
+          type="text"
+          value={newStep}
+          onChange={(e) => setNewStep(e.target.value)}
+        />
+        <button type="button" onClick={addStep}>+</button>
       </div>
       {deleteInfo &&
         <Dialog

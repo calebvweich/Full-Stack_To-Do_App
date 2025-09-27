@@ -10,7 +10,7 @@ import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask'
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep } from '../../api';
+import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks } from '../../api';
 
 export default function TaskPage() {
   // VARIABLES
@@ -57,12 +57,23 @@ export default function TaskPage() {
     }
   }
 
+  async function handleTaskDrop(type, taskId, newGroupId) {
+    if (type === "task") {
+      const newGroup = await reorderTasks(newGroupId, taskId)
+      setTasks(prev =>
+        prev.map(task =>
+          task._id === taskId ? { ...task, group: newGroup } : task
+        )
+      );
+    }
+  };
+
   async function handleReorder(taskId, newOrder) {
     const newSteps = await reorderSteps(taskId, newOrder)
     setTasks(prev =>
       prev.map(task =>
         task._id === taskId
-          ? { ...task, steps: [...newSteps] } // new array reference
+          ? { ...task, steps: newSteps } // new array reference
           : task
       )
     )
@@ -106,7 +117,11 @@ export default function TaskPage() {
           </div>
         </div>
       </div>
-      <div className="taskArea">
+      <div
+        className="taskArea"
+        onDrop={e => handleTaskDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"), "None")}
+        onDragOver={e => e.preventDefault()}
+      >
         {groups.map((group) => {
           return(
             <Group
@@ -117,6 +132,7 @@ export default function TaskPage() {
               statusOptions={statusOptions}
               taskDeletion={handleDelete}
               onReorderSteps={handleReorder}
+              onTaskDrop={handleTaskDrop}
             />
           )
         })}
