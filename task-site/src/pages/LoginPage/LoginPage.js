@@ -8,7 +8,7 @@ function Login({validate}) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (username != "" && password != "") {
+    if (username !== "" && password !== "") {
       const res = await login(username, password);
       if (res.token) {
         validate(res.token)
@@ -44,7 +44,7 @@ function Register({validate}) {
   const [name, setName] = useState("");
 
   async function handleSubmit(e) {
-    if (username != "" && password != "" && name != "") {
+    if (username !== "" && password !== "" && name !== "") {
       e.preventDefault();
       const res = await register(username, name, password);
       if (res.token) {

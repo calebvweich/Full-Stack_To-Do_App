@@ -1,7 +1,7 @@
 const Circle = ({ colour, percentage }) => {
   const r = 20;
   const circ = 2 * Math.PI * r;
-  const strokePct = ((100 - percentage) * circ) / 100; // where stroke will start, e.g. from 15% to 100%.
+  const strokePct = ((100 - percentage) * circ) / 100 || 0; // where stroke will start, e.g. from 15% to 100%.
   return (
     <circle
       r={r}

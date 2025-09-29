@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import "./NewTask.css"
 import { newGroup, newTask, getGroups } from "../../../api"
 import Dialog from "../Dialog"
-import Button from "../../Button/Button"
 
 function TaskForm({steps}) {
   const [name, setName] = useState("")
@@ -40,7 +39,7 @@ function TaskForm({steps}) {
   }, [])
 
   return(
-    <div className="taskFormContainer">
+    <form className="taskFormContainer" onSubmit={handleSubmit}>
       <label>Title</label><br/>
       <input
         type="text"
@@ -78,7 +77,7 @@ function TaskForm({steps}) {
       <div className="button">
         <button type="submit" className="inputButton">Submit</button>
       </div>
-    </div>
+    </form>
   )
 }
 
@@ -141,12 +140,5 @@ export function NewTask({close, tab, setTab}) {
           <GroupForm />
       }
     />
-    // <div>
-    //   {tab === "Task" ?
-    //     <TaskForm steps={steps} />
-    //     :
-    //     <GroupForm />
-    //   }
-    // </div>
   )
 }

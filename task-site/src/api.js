@@ -1,192 +1,271 @@
 const API_URL = process.env.REACT_APP_API_URL;
 
+
+async function apiFetch(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+
+  if (res.status === 401) {
+    localStorage.removeItem("token")
+    window.location.href = "/login"; // OR use React Router navigation
+    return;
+  }
+
+  return res;
+}
+
 // -----AUTH------
 // Register
 export async function register(username, name, password) {
-  const res = await fetch(`${API_URL}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, name, password }),
-  });
-  return res.json();
+  try {
+    const res = await fetch(`${API_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, name, password }),
+    });
+    return res.json();
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // Login
 export async function login(username, password) {
-  const res = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  });
-  const data = await res.json();
+  try {
+    const res = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await res.json();
 
-  // Store token in localStorage
-  if (data.token) localStorage.setItem("token", data.token);
+    // Store token in localStorage
+    if (data.token) localStorage.setItem("token", data.token);
 
-  return data;
+    return data;
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // -----TASKS------
 // New Task
 export async function newTask(name, group, steps, dueDate) {
-  steps.forEach((step, index) => {
-    step.order = index
-  });
-  const res = await fetch(`${API_URL}/tasks/newTask`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
-    },
-    body: JSON.stringify({ name, group, steps, dueDate })
-  });
-  const data = await res.json();
+  try {
+    steps.forEach((step, index) => {
+      step.order = index
+    });
+    const res = await apiFetch(`${API_URL}/tasks/newTask`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({ name, group, steps, dueDate })
+    });
+    const data = await res.json();
 
-  return data;
+    return data;
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // New Group
 export async function newGroup(name) {
-  const res = await fetch(`${API_URL}/tasks/newGroup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
-    },
-    body: JSON.stringify({ name })
-  });
-  const data = await res.json();
+  try {
+    const res = await apiFetch(`${API_URL}/tasks/newGroup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({ name })
+    });
+    const data = await res.json();
 
-  return data;
+    return data;
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // Get Tasks
 export async function getTasks() {
-  const res = await fetch (`${API_URL}/tasks/getTasks`, {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/getTasks`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    if (res.ok) {
+      const tasks = await res.json();
+      return tasks
     }
-  });
-  if (res.ok) {
-    const tasks = await res.json();
-    return tasks
+  } catch (err) {
+    console.log(err)
   }
 }
 
 // Get Groups
 export async function getGroups() {
-  const res = await fetch (`${API_URL}/tasks/getGroups`, {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/getGroups`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    if (res.ok) {
+      const groups = await res.json();
+      return groups
     }
-  });
-  if (res.ok) {
-    const groups = await res.json();
-    return groups
+  } catch (err) {
+    console.log(err)
   }
 }
 
 // Delete Task
 export async function deleteTask(id) {
-  const res = await fetch (`${API_URL}/tasks/task/${id}`, {
-    method: "DELETE",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
-    }
-  })
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/task/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // Delete Group
 export async function deleteGroup(id) {
-  const res = await fetch (`${API_URL}/tasks/group/${id}`, {
-    method: "DELETE",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
-    }
-  })
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/group/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // Delete Step
 export async function deleteStep(task, step) {
-  const res = await fetch (`${API_URL}/tasks/${task}/deleteStep/${step}`, {
-    method: "DELETE",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
-    }
-  })
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/${task}/deleteStep/${step}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // Reorder Tasks
 export async function reorderTasks(groupId, taskId) {
-  const res = await fetch (`${API_URL}/tasks/${groupId}/reorder/${taskId}`, {
-    method: "PATCH",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/${groupId}/reorder/${taskId}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+    if (res.ok) {
+      const newTask = await res.json()
+      return newTask;
     }
-  })
-  if (res.ok) {
-    const newTask = await res.json()
-    return newTask;
+  } catch (err) {
+    console.log(err)
   }
 }
 
 // Reorder Steps
 export async function reorderSteps(taskId, newOrder) {
-  const res = await fetch (`${API_URL}/tasks/${taskId}/steps/reorder`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ order: newOrder })
-  })
-  if (res.ok) {
-    const newSteps = await res.json()
-    return newSteps
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/${taskId}/steps/reorder`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order: newOrder })
+    })
+    if (res.ok) {
+      const newSteps = await res.json()
+      return newSteps
+    }
+  } catch (err) {
+    console.log(err)
   }
 }
 
 // Toggle Step Completion
 export async function toggleStepCompletion(task, step) {
-  const res = await fetch (`${API_URL}/tasks/${task}/steps/${step}`, {
-    method: "PATCH"
-  })
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/${task}/steps/${step}`, {
+      method: "PATCH"
+    })
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // Change task Status
 export async function setTaskStatus(taskId, newStatus) {
-  const res = await fetch (`${API_URL}/tasks/${taskId}/status`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
-    },
-    body: JSON.stringify({ newStatus: newStatus})
-  })
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/${taskId}/status`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({ newStatus: newStatus})
+    })
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // New Step
 export async function addStepToTask(task, newStep) {
-  const res = await fetch (`${API_URL}/tasks/${task}/newStep`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
-    },
-    body: JSON.stringify({ name: newStep })
-  })
-  if (res.ok) {
-    const updatedTask = await res.json()
-    return updatedTask;
-  } else {
-    console.log(res)
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/${task}/newStep`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({ name: newStep })
+    })
+    if (res.ok) {
+      const updatedTask = await res.json()
+      return updatedTask;
+    } else {
+      console.log(res)
+    }
+  } catch (err) {
+    console.log(err)
   }
 }
 
 // Get protected data
 export async function getProtected() {
-  const token = localStorage.getItem("token");
-  const res = await fetch(`${API_URL}/protected`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.json();
+  try {
+    const token = localStorage.getItem("token");
+    const res = await apiFetch(`${API_URL}/protected`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.json();
+  } catch (err) {
+    console.log(err)
+  }
 }
