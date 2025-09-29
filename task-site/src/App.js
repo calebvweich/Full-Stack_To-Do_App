@@ -43,7 +43,7 @@ function App() {
             <div className="headerText">Welcome Name</div>
           </div>
           <div className="logoutButton">
-            <Button text={"LogOut"} onClick={logout} />
+            <Button text={"Log Out"} onClick={logout} />
           </div>
         </header>
         <Routes>

@@ -36,3 +36,20 @@
 ::-webkit-scrollbar-thumb {
   background: #4A4A4A;
 }
+.selected {
+  color: #b1aca0 !important;
+  border-bottom: 1px solid #b1aca0 !important;
+}
+input {
+  width: 75%;
+  background: #D9D5C9;
+  padding: 2%;
+  border-radius: 10px;
+  border: none;
+}
+button {
+  border: none;
+  padding: 0.4rem 1rem;
+  background: #D9D5C9;
+  border-radius: 10px;
+}

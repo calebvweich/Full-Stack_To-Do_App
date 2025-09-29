@@ -111,7 +111,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
           return(
             <div
               key={index}
-              className="step"
+              className="step stepHover"
               onClick={() => manageMode ? setDeleteInfo({"object": step, type: "step", extra: taskState._id}) : toggleStep(index)}
               draggable
               onDragStart={(e) => handleDragStart(e, index)}

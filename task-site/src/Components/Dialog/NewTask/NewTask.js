@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import "./NewTask.css"
 import { newGroup, newTask, getGroups } from "../../../api"
+import Dialog from "../Dialog"
+import Button from "../../Button/Button"
 
 function TaskForm({steps}) {
   const [name, setName] = useState("")
@@ -39,41 +41,43 @@ function TaskForm({steps}) {
 
   return(
     <div className="taskFormContainer">
-      <form onSubmit={handleSubmit}>
-        <label>Title</label><br/>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <br/><label>Steps</label><br/>
-        <input
-          type="text"
-          value={step}
-          onChange={(e) => setStep(e.target.value)}
-        />
-        <button type="button" onClick={addStep}>+</button>
-        {steps.map((step) => {
-          return(
-            <label key={step._id}><br/>{step.name}</label>
-          )}
+      <label>Title</label><br/>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <br/><br/><label>Steps</label><br/>
+      <div className="newSteps">
+      <input
+        type="text"
+        value={step}
+        onChange={(e) => setStep(e.target.value)}
+      />
+      <button type="button" onClick={addStep}>+</button>
+      </div>
+      {steps.map((step) => {
+        return(
+          <label key={step._id}>{step.name}<br/></label>
         )}
-        <br/><label>Group</label><br/>
-        <select id="groups" name="groups" onChange={(e) => setGroup(e.target.value)}>
-          <option value="None">None</option>
-          {groupList.map((group) => {
-            return(
-              <option value={group.name} key={group._id}>{group.name}</option>
-            )
-          })}
-        </select>
-        <br/><label>Due Date</label><br/>
-        <input
-          type="date"
-          onChange={(e) => (setDueDate(e.target.value))}
-        />
-        <br/><br/><br/><br/><button type="submit">Submit</button>
-      </form>
+      )}
+      <br/><label>Group</label><br/>
+      <select id="groups" name="groups" onChange={(e) => setGroup(e.target.value)}>
+        <option value="None">None</option>
+        {groupList.map((group) => {
+          return(
+            <option value={group.name} key={group._id}>{group.name}</option>
+          )
+        })}
+      </select>
+      <br/><br/><label>Due Date</label><br/>
+      <input
+        type="date"
+        onChange={(e) => (setDueDate(e.target.value))}
+      />
+      <div className="button">
+        <button type="submit" className="inputButton">Submit</button>
+      </div>
     </div>
   )
 }
@@ -92,20 +96,20 @@ function GroupForm() {
 
   return(
     <div className="taskFormContainer">
-      <form onSubmit={handleSubmit}>
-        <label>Name</label><br/>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <br/><br/><br/><br/><button type="submit">Submit</button>
-      </form>
+      <label>Name</label><br/>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <div className="button">
+        <button onClick={() => handleSubmit} className="inputButton">Submit</button>
+      </div>
     </div>
   )
 }
 
-export function NewTaskHeader({tab, setTab}) {
+function NewTaskHeader({tab, setTab}) {
   return(
     <div className="taskHeader">
       <div
@@ -124,15 +128,25 @@ export function NewTaskHeader({tab, setTab}) {
   )
 }
 
-export function NewTask({tab}) {
+export function NewTask({close, tab, setTab}) {
   const steps = []
   return(
-    <div>
-      {tab === "Task" ?
-        <TaskForm steps={steps} />
-        :
-        <GroupForm />
+    <Dialog
+      close={close}
+      title={<NewTaskHeader tab={tab} setTab={setTab} />}
+      content={
+        tab === "Task" ?
+          <TaskForm steps={steps} />
+          :
+          <GroupForm />
       }
-    </div>
+    />
+    // <div>
+    //   {tab === "Task" ?
+    //     <TaskForm steps={steps} />
+    //     :
+    //     <GroupForm />
+    //   }
+    // </div>
   )
 }

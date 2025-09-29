@@ -5,8 +5,7 @@ import './TaskPage.css';
 import Button from '../../Components/Button/Button';
 import Task from '../../Components/Task/Task';
 import Group from '../../Components/Group/Group';
-import Dialog from '../../Components/Dialog/Dialog';
-import { NewTask, NewTaskHeader } from '../../Components/Dialog/NewTask/NewTask';
+import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
@@ -150,10 +149,10 @@ export default function TaskPage() {
         })}
       </div>
       {dialogOpen && (
-        <Dialog
+        <NewTask
           close={() => setDialogOpen(false)}
-          title={<NewTaskHeader tab={dialogTab} setTab={setDialogTab} />}
-          content={<NewTask tab={dialogTab} />}
+          tab={dialogTab}
+          setTab={setDialogTab}
         />
       )}
     </div>

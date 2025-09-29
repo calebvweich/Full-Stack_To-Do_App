@@ -2,10 +2,6 @@
   display: flex;
   width: 100%;
 }
-.selected {
-  color: aqua !important;
-  border-bottom: 1px solid aqua !important;
-}
 .dialogHeaderText {
   padding-bottom: .5rem;
   color: #675858;

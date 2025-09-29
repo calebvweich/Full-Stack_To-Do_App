@@ -24,13 +24,15 @@ function Login({validate}) {
         value={username}
         onChange={(e) => setusername(e.target.value)}
       />
-      <br/><label>Password</label><br/>
+      <br/><br/><label>Password</label><br/>
       <input
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <br/><button type="submit">Login</button>
+      <div className="button">
+        <button type="submit" className="inputButton">Login</button>
+      </div>
     </form>
   )
 }
@@ -57,19 +59,21 @@ function Register({validate}) {
         value={username}
         onChange={(e) => setusername(e.target.value)}
       />
-      <br/><label>Name</label><br/>
+      <br/><br/><label>Name</label><br/>
       <input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <br/><label>Password</label><br/>
+      <br/><br/><label>Password</label><br/>
       <input
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <br/><button type="submit">Login</button>
+      <div className="button">
+        <button type="submit" className="inputButton">Register</button>
+      </div>
     </form>
   )
 }
