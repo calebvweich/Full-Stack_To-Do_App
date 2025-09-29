@@ -63,9 +63,11 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
   };
 
   async function addStep() {
-    const updatedTask = await addStepToTask(taskState._id, newStep)
-    setTaskState(updatedTask)
-    setNewStep("")
+    if (newStep != "") {
+      const updatedTask = await addStepToTask(taskState._id, newStep)
+      setTaskState(updatedTask)
+      setNewStep("")
+    }
   }
 
   function pcentComplete (task) {

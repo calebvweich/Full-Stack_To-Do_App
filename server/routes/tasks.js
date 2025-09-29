@@ -64,19 +64,27 @@ router.get("/getGroups", auth, async (req, res) => {
 
 // Delete Task
 router.delete("/task/:id", async (req, res) => {
-  await task.findByIdAndDelete(req.params.id);
-  res.json({ message: "Task deleted" });
+  try {
+    await task.findByIdAndDelete(req.params.id);
+    res.json({ message: "Task deleted" });
+  } catch (err) {
+    res.status(500).json({ msg: err.message })
+  }
 });
 
 // Delete Group
 router.delete("/group/:id", async (req, res) => {
-  const currentGroup = await group.findById(req.params.id)
-  const currentTasks = await task.find({ "group": { $eq: currentGroup.name }})
-  currentTasks.forEach(async toDel => {
-    await task.findByIdAndDelete(toDel._id)
-  })
-  await group.findByIdAndDelete(req.params.id);
-  res.json({ message: "Group deleted" });
+  try {
+    const currentGroup = await group.findById(req.params.id)
+    const currentTasks = await task.find({ "group": { $eq: currentGroup.name }})
+    currentTasks.forEach(async toDel => {
+      await task.findByIdAndDelete(toDel._id)
+    })
+    await group.findByIdAndDelete(req.params.id);
+    res.json({ message: "Group deleted" });
+  } catch (err) {
+    res.status(500).json({ msg: err.message })
+  }
 });
 
 // Reorder Tasks

@@ -8,11 +8,13 @@ function Login({validate}) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const res = await login(username, password);
-    if (res.token) {
-      validate(res.token)
-    } else {
-      console.log("Failed: ", res);
+    if (username != "" && password != "") {
+      const res = await login(username, password);
+      if (res.token) {
+        validate(res.token)
+      } else {
+        console.log("Failed: ", res);
+      }
     }
   }
 
@@ -42,12 +44,14 @@ function Register({validate}) {
   const [name, setName] = useState("");
 
   async function handleSubmit(e) {
-    e.preventDefault();
-    const res = await register(username, name, password);
-    if (res.token) {
-      validate(res.token)
-    } else {
-      console.log("Failed: ", res);
+    if (username != "" && password != "" && name != "") {
+      e.preventDefault();
+      const res = await register(username, name, password);
+      if (res.token) {
+        validate(res.token)
+      } else {
+        console.log("Failed: ", res);
+      }
     }
   }
 
