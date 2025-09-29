@@ -78,6 +78,10 @@ export default function TaskPage() {
     )
   }
 
+  function filterTask(groupName) {
+    return(tasks.filter(task => task.group === groupName && (task.status === selectedStatus || selectedStatus === "")))
+  }
+
   // useEffect to get tasks and groups
   useEffect(() => {
     getUserTasks()
@@ -122,20 +126,22 @@ export default function TaskPage() {
         onDragOver={e => e.preventDefault()}
       >
         {groups.map((group) => {
-          return(
-            <Group
-              key={group._id}
-              group={group}
-              tasks={tasks.filter(task => task.group === group.name)}
-              manageMode={manageMode}
-              statusOptions={statusOptions}
-              taskDeletion={handleDelete}
-              onReorderSteps={handleReorder}
-              onTaskDrop={handleTaskDrop}
-            />
-          )
+          if ((group.name === selectedGroup || selectedGroup === "") && filterTask(group.name).length > 0) {
+            return(
+              <Group
+                key={group._id}
+                group={group}
+                tasks={filterTask(group.name)}
+                manageMode={manageMode}
+                statusOptions={statusOptions}
+                taskDeletion={handleDelete}
+                onReorderSteps={handleReorder}
+                onTaskDrop={handleTaskDrop}
+              />
+            )
+          }
         })}
-        {tasks.filter(task => task.group === "None").map((task) => {
+        {!selectedGroup && filterTask("None").map((task) => {
           return(
             <Task
               key={task._id}
