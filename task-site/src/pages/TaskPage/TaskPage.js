@@ -96,16 +96,18 @@ export default function TaskPage() {
     <div className="body">
       <div className="options">
         <div className="filters">
-          <div className="filterType">
-            <div className="filters">
-              {groups.map((group) => {
-                return(
-                  <Button key={group._id} text={group.name} onClick={() => setSelectedGroup(group.name)} />
-                )
-              })}
+          {groups.length > 0 &&
+            <div className="filterType">
+              <div className="filters">
+                {groups.map((group) => {
+                  return(
+                    <Button key={group._id} text={group.name} onClick={() => setSelectedGroup(group.name)} />
+                  )
+                })}
+              </div>
+              Group Name
             </div>
-            Group Name
-          </div>
+          }
           <div className="filterType">
             <div className="filters">
               {statusOptions.map((name, index) => {
