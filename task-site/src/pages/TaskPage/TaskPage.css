@@ -6,14 +6,22 @@
   left: 0;
   right: 0;
 }
-.taskArea {
+.taskAreaContainer {
   overflow: auto;
   position: absolute;
   padding-top: 2rem;
-  display: flex;
   gap: 2rem;
   top: 10%;
   bottom: 0;
+  left: 2%;
+  right: 2%;
+}
+.taskArea {
+  position: absolute;
+  display: flex;
+  gap: 2rem;
+  top: 10%;
+  bottom: 15%;
   left: 2%;
   right: 2%;
 }

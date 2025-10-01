@@ -130,11 +130,11 @@ export default function TaskPage() {
           </div>
         </div>
       </div>
-      <div
-        className="taskArea"
+      <div className="taskAreaContainer"
         onDrop={e => handleTaskDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"), "None")}
         onDragOver={e => e.preventDefault()}
       >
+      <div className="taskArea">
         {groups.map((group) => {
           if ((group.name === selectedGroup || selectedGroup === "")) {
             return(
@@ -163,6 +163,7 @@ export default function TaskPage() {
             />
           )
         })}
+      </div>
       </div>
       {dialogOpen && (
         <NewTask

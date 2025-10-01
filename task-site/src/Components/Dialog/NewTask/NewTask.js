@@ -94,7 +94,7 @@ function GroupForm() {
   }
 
   return(
-    <div className="taskFormContainer">
+    <form className="taskFormContainer" onSubmit={handleSubmit}>
       <label>Name</label><br/>
       <input
         type="text"
@@ -102,9 +102,9 @@ function GroupForm() {
         onChange={(e) => setName(e.target.value)}
       />
       <div className="button">
-        <button onClick={() => handleSubmit} className="inputButton">Submit</button>
+        <button type="submit" className="inputButton">Submit</button>
       </div>
-    </div>
+    </form>
   )
 }
 

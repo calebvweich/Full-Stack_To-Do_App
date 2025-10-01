@@ -15,14 +15,18 @@ export default function Group({group, tasks, manageMode, statusOptions, taskDele
   return(
     <div
       className="groupContainer"
-      onDrop={e => handleDrop(e, e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"))}
-      onDragOver={e => e.preventDefault()}
     >
-      <div className="groupName">
+      <div className="groupName"
+        onDrop={e => handleDrop(e, e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"))}
+        onDragOver={e => e.preventDefault()}
+      >
           {group.name}
           {manageMode && <Button text={"A"} onClick={() => setDeleteInfo({"object": group, "type": "group", "extra": null})} />}
       </div>
-      <div className="groupedTasks">
+      <div className="groupedTasks"
+        onDrop={e => handleDrop(e, e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"))}
+        onDragOver={e => e.preventDefault()}
+      >
         {tasks ? tasks.map((task) => {
           return(
             <Task
