@@ -7,15 +7,15 @@ import Dialog from "../Dialog/Dialog"
 import { DeleteDialog, DeleteDialogHeader } from "../Dialog/Delete/Delete"
 
 export default function Group({group, tasks, manageMode, statusOptions, taskDeletion, onReorderSteps, onTaskDrop}) {
-  const [dialogOpen, setDialogOpen] = useState(false)
   const [deleteInfo, setDeleteInfo] = useState(null)
-  const handleDrop = (type, taskId) => {
+  const handleDrop = (e, type, taskId) => {
+    e.stopPropagation()
     onTaskDrop(type, taskId, group.name);
   };
   return(
     <div
       className="groupContainer"
-      onDrop={e => handleDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"))}
+      onDrop={e => handleDrop(e, e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"))}
       onDragOver={e => e.preventDefault()}
     >
       <div className="groupName">

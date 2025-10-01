@@ -9,7 +9,7 @@ function Login({validate}) {
   async function handleSubmit(e) {
     e.preventDefault();
     if (username !== "" && password !== "") {
-      const res = await login(username, password);
+      const res = await login(username.toLowerCase(), password);
       if (res.token) {
         validate(res.token)
       } else {
@@ -46,7 +46,7 @@ function Register({validate}) {
   async function handleSubmit(e) {
     if (username !== "" && password !== "" && name !== "") {
       e.preventDefault();
-      const res = await register(username, name, password);
+      const res = await register(username.toLowerCase(), name, password);
       if (res.token) {
         validate(res.token)
       } else {

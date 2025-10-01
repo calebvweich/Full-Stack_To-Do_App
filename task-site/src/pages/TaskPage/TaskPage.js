@@ -82,6 +82,11 @@ export default function TaskPage() {
     return(tasks.filter(task => task.group === groupName && (task.status === selectedStatus || selectedStatus === "")))
   }
 
+  function resetFilters() {
+    setSelectedGroup("")
+    setSelectedStatus("")
+  }
+
   // useEffect to get tasks and groups
   useEffect(() => {
     getUserTasks()
@@ -92,7 +97,6 @@ export default function TaskPage() {
       <div className="options">
         <div className="filters">
           <div className="filterType">
-            Group Name
             <div className="filters">
               {groups.map((group) => {
                 return(
@@ -100,15 +104,21 @@ export default function TaskPage() {
                 )
               })}
             </div>
+            Group Name
           </div>
           <div className="filterType">
-            Status
             <div className="filters">
               {statusOptions.map((name, index) => {
                 return(
                   <Button key={index} text={name} onClick={() => setSelectedStatus(name)} />
                 )
               })}
+            </div>
+            Status
+          </div>
+          <div className="filterType">
+            <div>
+              <Button text={"Clear Filters"} onClick={() => resetFilters()} />
             </div>
           </div>
         </div>
@@ -126,7 +136,7 @@ export default function TaskPage() {
         onDragOver={e => e.preventDefault()}
       >
         {groups.map((group) => {
-          if ((group.name === selectedGroup || selectedGroup === "") && filterTask(group.name).length > 0) {
+          if ((group.name === selectedGroup || selectedGroup === "")) {
             return(
               <Group
                 key={group._id}
