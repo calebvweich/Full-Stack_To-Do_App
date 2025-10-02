@@ -1,3 +1,5 @@
+import { toast } from "./Components/Toast/Toast";
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 
@@ -11,9 +13,15 @@ async function apiFetch(url, options = {}) {
   });
 
   if (res.status === 401) {
+    toast.error("Error: Login Timeout")
     localStorage.removeItem("token")
-    window.location.href = "/login"; // OR use React Router navigation
+    window.location.href = "/login";
     return;
+  }
+  if (!res.ok) {
+    const message = await res.text();
+    toast.error(`Error: ${message}`);
+    throw new Error(message);
   }
 
   return res;
@@ -28,8 +36,14 @@ export async function register(username, name, password) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, name, password }),
     });
-    return res.json();
+    if (!res.ok) {
+      const message = await res.json();
+      toast.error(`Error: ${message.msg}`);
+    } else {
+      return res.json();
+    }
   } catch (err) {
+    toast.error(`Error: ${err}`)
     console.log(err)
   }
 }
@@ -42,13 +56,16 @@ export async function login(username, password) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
-    const data = await res.json();
-
-    // Store token in localStorage
-    if (data.token) localStorage.setItem("token", data.token);
-
-    return data;
+    console.log(res)
+    if (!res.ok) {
+      const message = await res.json();
+      toast.error(`Error: ${message.msg}`);
+    } else {
+      return res.json();
+    }
   } catch (err) {
+    const message = await err.text();
+    toast.error(`Error: ${message}`)
     console.log(err)
   }
 }

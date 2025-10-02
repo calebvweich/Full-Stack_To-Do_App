@@ -1,0 +1,34 @@
+.toastContainer {
+  position: absolute;
+  top: auto;
+  bottom: 5%;
+  left: 80%;
+  right: 2%;
+  z-index: 10;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2rem;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bolder;
+  border-radius: 10px;
+  padding: 1rem;
+  color: white;
+}
+
+.error {
+  background: red;
+}
+
+.success {
+  background: rgb(48, 226, 32);
+}
+
+.info {
+  background: rgb(0, 162, 255);
+}

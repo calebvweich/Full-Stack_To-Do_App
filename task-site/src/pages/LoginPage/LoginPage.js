@@ -10,7 +10,7 @@ function Login({validate}) {
     e.preventDefault();
     if (username !== "" && password !== "") {
       const res = await login(username.toLowerCase(), password);
-      if (res.token) {
+      if (res && res.token) {
         validate(res.token)
       } else {
         console.log("Failed: ", res);
@@ -47,7 +47,7 @@ function Register({validate}) {
     if (username !== "" && password !== "" && name !== "") {
       e.preventDefault();
       const res = await register(username.toLowerCase(), name, password);
-      if (res.token) {
+      if (res && res.token) {
         validate(res.token)
       } else {
         console.log("Failed: ", res);

@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { toast, ToastProvider } from './Components/Toast/Toast';
 
 
 function App() {
@@ -36,22 +37,24 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="app">
-        <header className="appHeader">
-          <div className="account">
-            <Button text={"Account"} />
-            <div className="headerText">Welcome Name</div>
-          </div>
-          <div className="logoutButton">
-            <Button text={"Log Out"} onClick={logout} />
-          </div>
-        </header>
-        <Routes>
-          <Route path="/" element={token != null ? <Navigate to="/tasks" /> : <LoginPage validate={login} />}/>
-          <Route path="/tasks" element={token != null ? <TaskPage /> : <Navigate to="/" />}/>
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </div>
+      <ToastProvider>
+        <div className="app">
+          <header className="appHeader">
+            <div className="account">
+              <Button text={"Account"} onClick={() => toast.info("Account Settings")} />
+              <div className="headerText">Welcome Name</div>
+            </div>
+            <div className="logoutButton">
+              <Button text={"Log Out"} onClick={logout} />
+            </div>
+          </header>
+          <Routes>
+            <Route path="/" element={token != null ? <Navigate to="/tasks" /> : <LoginPage validate={login} />}/>
+            <Route path="/tasks" element={token != null ? <TaskPage /> : <Navigate to="/" />}/>
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
+      </ToastProvider>
     </BrowserRouter>
   );
 }

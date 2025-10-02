@@ -5,10 +5,10 @@
 .dialogHeaderText {
   min-width: fit-content;
   padding: .5rem;
-  color: #675858;
+  color: #b1aca0;
   cursor: pointer;
   width: 50%;
-  border-bottom: 1px solid #675858;
+  border-bottom: 1px solid #b1aca0;
 }
 .newSteps {
   display: flex;
