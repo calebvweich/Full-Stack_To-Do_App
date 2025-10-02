@@ -30,6 +30,11 @@ export function ToastProvider({ children }) {
   };
   
   useEffect(() => {
+    const stored = localStorage.getItem("toastMessage");
+    if (stored) {
+      addToast(stored, "error");
+      localStorage.removeItem("toastMessage");
+    }
     setToastFn(addToast);
   }, []);
 

@@ -13,7 +13,7 @@ async function apiFetch(url, options = {}) {
   });
 
   if (res.status === 401) {
-    toast.error("Error: Login Timeout")
+    localStorage.setItem("toastMessage", "Error: Login Timeout")
     localStorage.removeItem("token")
     window.location.href = "/login";
     return;
@@ -56,7 +56,6 @@ export async function login(username, password) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
-    console.log(res)
     if (!res.ok) {
       const message = await res.json();
       toast.error(`Error: ${message.msg}`);

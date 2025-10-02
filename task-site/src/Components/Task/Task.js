@@ -96,10 +96,10 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
         <div>
           <div>{taskState.name}</div>
           {manageMode ? 
-            <select onChange={(e) => updateStatus(e.target.value)}>
+            <select value={taskState.status} onChange={(e) => updateStatus(e.target.value)}>
               {statusOptions.map((option, index) => {
                 return(
-                  <option key={index} selected={option === taskState.status} value={option}>{option}</option>
+                  <option key={index} value={option}>{option}</option>
               )})}
             </select>
             :
