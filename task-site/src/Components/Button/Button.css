@@ -17,8 +17,11 @@
   box-shadow: -1px -2px black;
 }
 .buttonText {
-  font-size: 1.2rem;
+  display: flex;
+  height: 100%;
   color: #675858;
-  text-align: center;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  line-height: 100%;
 }

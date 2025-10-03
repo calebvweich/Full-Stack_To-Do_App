@@ -14,7 +14,7 @@ import { toast } from '../../Components/Toast/Toast';
 
 export default function TaskPage() {
   // VARIABLES
-  const [selectedGroup, setSelectedGroup] = useState("")
+  const [selectedGroups, setSelectedGroups] = useState([])
   const [selectedStatus, setSelectedStatus] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogTab, setDialogTab] = useState("Task")
@@ -84,8 +84,19 @@ export default function TaskPage() {
   }
 
   function resetFilters() {
-    setSelectedGroup("")
+    setSelectedGroups([])
     setSelectedStatus("")
+  }
+
+  function toggleSelect(groupName) {
+    const newGroup = []
+    if (selectedGroups.includes(groupName)) {
+      selectedGroups.forEach(group => group !== groupName && newGroup.push(group))
+    } else {
+      selectedGroups.forEach(group => group !== groupName && newGroup.push(group))
+      newGroup.push(groupName)
+    }
+    setSelectedGroups(newGroup)
   }
 
   // useEffect to get tasks and groups
@@ -96,13 +107,13 @@ export default function TaskPage() {
   return (
     <div className="body">
       <div className="options">
-        <div className="filters">
+        <div className="filterContainer">
           {groups.length > 0 &&
             <div className="filterType">
               <div className="filters">
                 {groups.map((group) => {
                   return(
-                    <Button key={group._id} text={group.name} onClick={() => setSelectedGroup(group.name)} />
+                    <div className={`${selectedGroups.includes(group.name) && "active"} filter`} onClick={() => toggleSelect(group.name)}>{group.name}</div>
                   )
                 })}
               </div>
@@ -139,7 +150,7 @@ export default function TaskPage() {
       >
       <div className="taskArea">
         {groups.map((group) => {
-          if ((group.name === selectedGroup || selectedGroup === "")) {
+          if ((selectedGroups.includes(group.name) || selectedGroups.length === 0)) {
             return(
               <Group
                 key={group._id}
@@ -154,7 +165,7 @@ export default function TaskPage() {
             )
           }
         })}
-        {!selectedGroup && filterTask("None").map((task) => {
+        {!selectedGroups && filterTask("None").map((task) => {
           return(
             <Task
               key={task._id}

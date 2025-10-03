@@ -1,16 +1,16 @@
-import { useState } from "react";
 import "./Task.css"
+
+import { useState } from "react";
 import Progress from "../Progress/Progress";
 import Button from "../Button/Button";
 import { useEffect } from "react";
 import { addStepToTask, setTaskStatus, toggleStepCompletion } from "../../api";
-import Dialog from "../Dialog/Dialog";
-import { DeleteDialog, DeleteDialogHeader } from "../Dialog/Delete/Delete";
+import { DeleteDialog } from "../Dialog/Delete/Delete";
+import { MdDeleteOutline } from "react-icons/md";
 
 export default function Task({task, manageMode, statusOptions, taskDeletion, onReorderSteps}) {
   // Create local state for the task to enable re-rendering
   const [taskState, setTaskState] = useState(task);
-  const [draggedIndex, setDraggedIndex] = useState(null);
   const [newStep, setNewStep] = useState("")
   const [deleteInfo, setDeleteInfo] = useState(null)
 
@@ -63,7 +63,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
   };
 
   async function addStep() {
-    if (newStep != "") {
+    if (newStep !== "") {
       const updatedTask = await addStepToTask(taskState._id, newStep)
       setTaskState(updatedTask)
       setNewStep("")
@@ -106,7 +106,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
             <div>{taskState.status}</div>
           }
         </div>
-        {manageMode ? <Button text={"A"} onClick={() => setDeleteInfo({"object": taskState, type: "task"})} /> : <Progress pcent={pcentComplete(taskState)} />}
+        {manageMode ? <Button text={<MdDeleteOutline />} onClick={() => setDeleteInfo({"object": taskState, type: "task"})} /> : <Progress pcent={pcentComplete(taskState)} />}
       </div>
       <div className="stepsList">
         {taskState.steps.map((step, index) => {
@@ -135,10 +135,10 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
         <button type="button" onClick={addStep}>+</button>
       </div>
       {deleteInfo &&
-        <Dialog
-          close={() => setDeleteInfo(false)}
-          title={<DeleteDialogHeader toDelete={deleteInfo} />}
-          content={<DeleteDialog toDelete={deleteInfo} handleDelete={taskDeletion} close={() => setDeleteInfo(false)} />}
+        <DeleteDialog
+          toDelete={deleteInfo}
+          handleDelete={taskDeletion}
+          close={() => setDeleteInfo(null)}
         />
       }
     </div>

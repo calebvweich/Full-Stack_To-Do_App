@@ -29,6 +29,23 @@
   display: flex;
   gap: 2rem;
 }
+.filter {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #4A4A4A;
+  margin: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.filter.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.filterContainer {
+  display: flex;
+  gap: 2rem;
+}
 .filterType {
   padding: 1rem;
   background: #D9D5C9;
@@ -37,6 +54,7 @@
 .options {
   display: flex;
   justify-content: space-between;
+  max-width: 100%;
 }
 .newButton {
   padding: 1rem;

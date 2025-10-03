@@ -3,8 +3,8 @@ import "./Group.css"
 import Task from "../Task/Task"
 import Button from "../Button/Button"
 import { useState } from "react"
-import Dialog from "../Dialog/Dialog"
-import { DeleteDialog, DeleteDialogHeader } from "../Dialog/Delete/Delete"
+import { DeleteDialog } from "../Dialog/Delete/Delete"
+import { MdDeleteOutline } from "react-icons/md";
 
 export default function Group({group, tasks, manageMode, statusOptions, taskDeletion, onReorderSteps, onTaskDrop}) {
   const [deleteInfo, setDeleteInfo] = useState(null)
@@ -21,7 +21,7 @@ export default function Group({group, tasks, manageMode, statusOptions, taskDele
         onDragOver={e => e.preventDefault()}
       >
           {group.name}
-          {manageMode && <Button text={"A"} onClick={() => setDeleteInfo({"object": group, "type": "group", "extra": null})} />}
+          {manageMode && <Button text={<MdDeleteOutline />} onClick={() => setDeleteInfo({"object": group, "type": "group", "extra": null})} />}
       </div>
       <div className="groupedTasks"
         onDrop={e => handleDrop(e, e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"))}
@@ -44,10 +44,10 @@ export default function Group({group, tasks, manageMode, statusOptions, taskDele
         }
       </div>
       {deleteInfo &&
-        <Dialog
+        <DeleteDialog
+          toDelete={deleteInfo}
+          handleDelete={taskDeletion}
           close={() => setDeleteInfo(null)}
-          title={<DeleteDialogHeader toDelete={deleteInfo} />}
-          content={<DeleteDialog toDelete={deleteInfo} handleDelete={taskDeletion} close={() => setDeleteInfo(false)} />}
         />
       }
     </div>
