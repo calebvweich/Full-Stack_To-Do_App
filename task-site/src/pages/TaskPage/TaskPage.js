@@ -83,21 +83,17 @@ export default function TaskPage() {
     return(tasks.filter(task => task.group === groupName && (task.status === selectedStatus || selectedStatus === "")))
   }
 
-  function resetFilters() {
-    setSelectedGroups([])
-    setSelectedStatus("")
+  function toggleSelect(groupName) {
+    setSelectedGroups(prev =>
+      prev.includes(groupName)
+        ? prev.filter(g => g !== groupName) // remove if already selected
+        : [...prev, groupName] // add if not selected
+    );
   }
 
-  function toggleSelect(groupName) {
-    const newGroup = []
-    if (selectedGroups.includes(groupName)) {
-      selectedGroups.forEach(group => group !== groupName && newGroup.push(group))
-    } else {
-      selectedGroups.forEach(group => group !== groupName && newGroup.push(group))
-      newGroup.push(groupName)
-    }
-    setSelectedGroups(newGroup)
-  }
+  function changeStatus(status) {
+  setSelectedStatus(prev => (prev === status ? "" : status));
+}
 
   // useEffect to get tasks and groups
   useEffect(() => {
@@ -113,7 +109,7 @@ export default function TaskPage() {
               <div className="filters">
                 {groups.map((group) => {
                   return(
-                    <div className={`${selectedGroups.includes(group.name) && "active"} filter`} onClick={() => toggleSelect(group.name)}>{group.name}</div>
+                    <div key={group._id} className={`${selectedGroups.includes(group.name) && "active"} filter`} onClick={() => toggleSelect(group.name)}>{group.name}</div>
                   )
                 })}
               </div>
@@ -124,16 +120,11 @@ export default function TaskPage() {
             <div className="filters">
               {statusOptions.map((name, index) => {
                 return(
-                  <Button key={index} text={name} onClick={() => setSelectedStatus(name)} />
+                  <div key={index} className={`${selectedStatus === name && "active"} filter`} onClick={() => changeStatus(name)}>{name}</div>
                 )
               })}
             </div>
             Status
-          </div>
-          <div className="filterType">
-            <div>
-              <Button text={"Clear Filters"} onClick={() => resetFilters()} />
-            </div>
           </div>
         </div>
         <div className="newButton">
@@ -162,6 +153,10 @@ export default function TaskPage() {
                 onReorderSteps={handleReorder}
                 onTaskDrop={handleTaskDrop}
               />
+            )
+          } else {
+            return (
+              <></>
             )
           }
         })}
