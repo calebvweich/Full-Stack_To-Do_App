@@ -176,8 +176,7 @@ router.post("/:taskId/newStep", auth, async (req, res) => {
     currentTask.steps.push({ name: name, order: nextOrder });
     currentTask.steps.sort((a, b) => a.order - b.order)
     await currentTask.save();
-    console.log(currentTask)
-    res.status(200).json(currentTask);
+    res.status(200).json(currentTask.steps.at(-1));
   } catch (err) {
     console.log(err)
     res.status(500).json({ message: "Server error" });

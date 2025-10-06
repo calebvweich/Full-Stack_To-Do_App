@@ -6,7 +6,7 @@ import { useState } from "react"
 import { DeleteDialog } from "../Dialog/Delete/Delete"
 import { MdDeleteOutline } from "react-icons/md";
 
-export default function Group({group, tasks, manageMode, statusOptions, taskDeletion, onReorderSteps, onTaskDrop}) {
+export default function Group({group, manageMode, groupDeletion, onTaskDrop, children}) {
   const [deleteInfo, setDeleteInfo] = useState(null)
   const handleDrop = (e, type, taskId) => {
     e.stopPropagation()
@@ -27,26 +27,12 @@ export default function Group({group, tasks, manageMode, statusOptions, taskDele
         onDrop={e => handleDrop(e, e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"))}
         onDragOver={e => e.preventDefault()}
       >
-        {tasks ? tasks.map((task) => {
-          return(
-            <Task
-              key={task._id}
-              task={task}
-              manageMode={manageMode}
-              statusOptions={statusOptions}
-              taskDeletion={taskDeletion}
-              onReorderSteps={onReorderSteps}
-            />
-          )
-        })
-          :
-          <div>None</div>
-        }
+        {children}
       </div>
       {deleteInfo &&
         <DeleteDialog
           toDelete={deleteInfo}
-          handleDelete={taskDeletion}
+          handleDelete={groupDeletion}
           close={() => setDeleteInfo(null)}
         />
       }

@@ -9,7 +9,7 @@ import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks } from '../../api';
+import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask } from '../../api';
 import { toast } from '../../Components/Toast/Toast';
 
 export default function TaskPage() {
@@ -35,6 +35,7 @@ export default function TaskPage() {
       setTasks(taskRes)
     }
   }
+
   async function handleDelete(id, toDelete, taskId) {
     if (toDelete === "task") {
       deleteTask(id);
@@ -98,9 +99,38 @@ export default function TaskPage() {
     );
   }
 
-  function changeStatus(status) {
-  setSelectedStatus(prev => (prev === status ? "" : status));
-}
+  function changeStatusFilter(status) {
+    setSelectedStatus(prev => (prev === status ? "" : status));
+  }
+
+  // Step Functions
+  async function addStep(taskId, step) {
+    console.log(step, taskId)
+    const newStep = await addStepToTask(taskId, step);
+    setTasks(prevTasks => 
+      prevTasks.map(task =>
+        task._id === taskId
+          ? { ...task, steps: [...task.steps, newStep] }
+          : task
+      )
+    );
+  }
+
+  function toggleStep(taskId, stepId) {
+    toggleStepCompletion(taskId, stepId)
+    setTasks(prevTasks => 
+      prevTasks.map(task =>
+        task._id === taskId
+          ? { ...task,
+          steps: task.steps.map(step =>
+            step._id === stepId
+            ? {...step, completed: !step.completed}
+            : step
+          )
+        } : task
+      )
+    )
+  }
 
   // useEffect to get tasks and groups
   useEffect(() => {
@@ -127,7 +157,7 @@ export default function TaskPage() {
             <div className="filters">
               {statusOptions.map((name, index) => {
                 return(
-                  <div key={index} className={`${selectedStatus === name && "active"} filter`} onClick={() => changeStatus(name)}>{name}</div>
+                  <div key={index} className={`${selectedStatus === name && "active"} filter`} onClick={() => changeStatusFilter(name)}>{name}</div>
                 )
               })}
             </div>
@@ -153,13 +183,28 @@ export default function TaskPage() {
               <Group
                 key={group._id}
                 group={group}
-                tasks={filterTask(group.name)}
                 manageMode={manageMode}
-                statusOptions={statusOptions}
                 taskDeletion={handleDelete}
-                onReorderSteps={handleReorder}
                 onTaskDrop={handleTaskDrop}
-              />
+              >
+                {filterTask(group.name) ? filterTask(group.name).map((task) => {
+                  return(
+                    <Task
+                      key={task._id}
+                      task={task}
+                      manageMode={manageMode}
+                      statusOptions={statusOptions}
+                      taskDeletion={handleDelete}
+                      onReorderSteps={handleReorder}
+                      addStep={addStep}
+                      toggleStep={toggleStep}
+                    />
+                  )
+                })
+                  :
+                  <div>None</div>
+                }
+              </Group>
             )
           } else {
             return (
