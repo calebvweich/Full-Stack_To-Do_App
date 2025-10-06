@@ -15,7 +15,6 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
   const [deleteInfo, setDeleteInfo] = useState(null)
 
   // Step drag
-  function handleDragStart(e, index) {
   function handleDragStart(e, id, taskId) {
     e.stopPropagation();
     e.dataTransfer.setData("type", "step");

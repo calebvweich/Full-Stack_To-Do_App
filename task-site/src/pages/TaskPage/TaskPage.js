@@ -74,16 +74,15 @@ export default function TaskPage() {
     // IF OLDTASKID REMOVE STEPID
     // IF NEWTASKID ADD STEPID AT NEWINDEX
     const oldTask = tasks.find(t => t._id === oldTaskId)
-    const newTask = tasks.find(t => t._id === newTaskId)
+    const newTask = newTaskId === oldTaskId ? { ...oldTask, steps: oldTask.steps.filter(s => s._id !== stepId)} : tasks.find(t => t._id === newTaskId)
     const step = oldTask.steps.find(s => s._id === stepId)
     newTask.steps.splice(newIndex, 0, step)
-    console.log(newTask)
     setTasks(prev =>
       prev.map(task =>
-        task._id === oldTaskId
-          ? { ...task, steps: task.steps.filter(s => s._id !== stepId) }
-        : task._id === newTaskId
+        task._id === newTaskId
           ? { ...task, steps: newTask.steps }
+        : task._id === oldTaskId
+          ? { ...task, steps: task.steps.filter(s => s._id !== stepId) }
         : task
       )
     )
