@@ -62,7 +62,7 @@ function TaskForm({steps, close, addTask}) {
         <option value="None">None</option>
         {groupList.map((group) => {
           return(
-            <option value={group.name} key={group._id}>{group.name}</option>
+            <option value={group._id} key={group._id}>{group.name}</option>
           )
         })}
       </select>

@@ -1,6 +1,7 @@
 import express from "express";
 import task from "../models/task.js";
 import group from "../models/group.js";
+import project from "../models/project.js";
 import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -13,7 +14,7 @@ router.post("/newTask", auth, async (req, res) => {
       userId: req.user.id,
       name: name,
       status: "Not-Started",
-      group: group,
+      groupId: group,
       steps: steps,
       dueDate: dueDate,
     })
@@ -36,6 +37,22 @@ router.post("/newGroup", auth, async (req, res) => {
     res.status(201).json(newGroup)
   } catch (err) {
     res.status(500).json({ msg: err.message })
+  }
+})
+
+// New Project
+router.post("/projects/new/:name", auth, async (req, res) => {
+  try {
+    const { name } = req.params;
+    const newProject = new project({
+      userId: req.user.id,
+      name: name
+    })
+    await newProject.save()
+    res.status(201).json(newProject)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "Server error" });
   }
 })
 
@@ -62,6 +79,17 @@ router.get("/getGroups", auth, async (req, res) => {
   }
 })
 
+// Get Projects
+router.get("/projects/get", auth, async (req, res) => {
+  try {
+    const userProjects = await project.find({ userId: req.user.id })
+    res.status(200).json(userProjects)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: err.message })
+  }
+})
+
 // Delete Task
 router.delete("/task/:id", async (req, res) => {
   try {
@@ -76,7 +104,7 @@ router.delete("/task/:id", async (req, res) => {
 router.delete("/group/:id", async (req, res) => {
   try {
     const currentGroup = await group.findById(req.params.id)
-    const currentTasks = await task.find({ "group": { $eq: currentGroup.name }})
+    const currentTasks = await task.find({ "group": { $eq: currentGroup._id }})
     currentTasks.forEach(async toDel => {
       await task.findByIdAndDelete(toDel._id)
     })
@@ -86,6 +114,17 @@ router.delete("/group/:id", async (req, res) => {
     res.status(500).json({ msg: err.message })
   }
 });
+
+// Delete Project
+router.delete("/project/delete/:id", async (req, res) => {
+  try {
+    await project.findOneAndDelete({ _id: id })
+    res.json({ message: "Project deleted" })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: err.message })
+  }
+})
 
 // Reorder Tasks
 router.patch("/:groupName/reorder/:taskId", async (req, res) => {
@@ -196,5 +235,6 @@ router.delete("/:taskId/deleteStep/:stepId", auth, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 })
+
 
 export default router;

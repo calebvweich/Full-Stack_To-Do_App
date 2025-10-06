@@ -11,6 +11,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { toast, ToastProvider } from './Components/Toast/Toast';
+import { newProject } from './api';
 
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
         <div className="app">
           <header className="appHeader">
             <div className="account">
-              <Button text={"Account"} onClick={() => toast.info("Account Settings")} />
+              <Button text={"Account"} onClick={() => newProject("Default")} />
               <div className="headerText">Welcome Name</div>
             </div>
             <div className="logoutButton">

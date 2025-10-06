@@ -111,6 +111,23 @@ export async function newGroup(name) {
   }
 }
 
+// New Project
+export async function newProject(name) {
+  try {
+    const res = await apiFetch(`${API_URL}/tasks/projects/new/${name}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+    })
+    const data = await res.json()
+    return data
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // Get Tasks
 export async function getTasks() {
   try {
@@ -147,6 +164,24 @@ export async function getGroups() {
   }
 }
 
+// Get Projects
+export async function getProjects() {
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/projects/get`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    if (res.ok) {
+      const projects = await res.json();
+      return projects;
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // Delete Task
 export async function deleteTask(id) {
   try {
@@ -169,6 +204,20 @@ export async function deleteGroup(id) {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// Delete Project
+export async function deleteProject(id) {
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/project/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
     })
   } catch (err) {
     console.log(err)

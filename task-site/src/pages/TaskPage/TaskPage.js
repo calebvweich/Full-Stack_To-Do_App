@@ -9,7 +9,7 @@ import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup } from '../../api';
+import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup, getProjects } from '../../api';
 import { toast } from '../../Components/Toast/Toast';
 
 export default function TaskPage() {
@@ -23,9 +23,13 @@ export default function TaskPage() {
   // DB
   const [tasks, setTasks] = useState([])
   const [groups, setGroups] = useState([])
+  const [projects, setProjects] = useState([])
 
   //FUNCTIONS
   async function getUserTasks() {
+    const projectRes = await getProjects()
+    setProjects(projectRes)
+    console.log(projectRes)
     const groupRes = await getGroups()
     if (groupRes) {
       setGroups(groupRes)
@@ -107,8 +111,8 @@ export default function TaskPage() {
     reorderSteps(newTaskId === oldTaskId ? { [oldTaskId]: oldTaskSteps.map(s => s._id) } : { [oldTaskId]: oldTaskSteps.map(s => s._id), [newTaskId]: newTask.steps.map(s => s._id) }, stepId)
   }
 
-  function filterTask(groupName) {
-    return(tasks.filter(task => task.group === groupName && (task.status === selectedStatus || selectedStatus === "")))
+  function filterTask(groupId) {
+    return(tasks.filter(task => task.groupId === groupId && (task.status === selectedStatus || selectedStatus === "")))
   }
 
   function toggleSelect(groupName) {
@@ -176,7 +180,7 @@ export default function TaskPage() {
               <div className="filters">
                 {groups.map((group) => {
                   return(
-                    <div key={group._id} className={`${selectedGroups.includes(group.name) && "active"} filter`} onClick={() => toggleSelect(group.name)}>{group.name}</div>
+                    <div key={group._id} className={`${selectedGroups.includes(group._id) && "active"} filter`} onClick={() => toggleSelect(group._id)}>{group.name}</div>
                   )
                 })}
               </div>
@@ -211,7 +215,7 @@ export default function TaskPage() {
       >
       <div className="taskArea">
         {groups.length > 0 && groups.map((group) => {
-          if ((selectedGroups.includes(group.name) || selectedGroups.length === 0)) {
+          if ((selectedGroups.includes(group._id) || selectedGroups.length === 0)) {
             return(
               <Group
                 key={group._id}
@@ -220,7 +224,7 @@ export default function TaskPage() {
                 groupDeletion={handleDelete}
                 onTaskDrop={handleTaskDrop}
               >
-                {filterTask(group.name) ? filterTask(group.name).map((task) => {
+                {filterTask(group._id) ? filterTask(group._id).map((task) => {
                   return(
                     <Task
                       key={task._id}

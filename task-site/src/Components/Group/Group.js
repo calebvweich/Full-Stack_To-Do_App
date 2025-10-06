@@ -10,7 +10,7 @@ export default function Group({group, manageMode, groupDeletion, onTaskDrop, chi
   const [deleteInfo, setDeleteInfo] = useState(null)
   const handleDrop = (e, type, taskId) => {
     e.stopPropagation()
-    onTaskDrop(type, taskId, group.name);
+    onTaskDrop(type, taskId, group._id);
   };
   return(
     <div

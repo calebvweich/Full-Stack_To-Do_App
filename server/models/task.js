@@ -10,7 +10,8 @@ const taskSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   name: { type: String, required: true },
   status: { type: String, required: true },
-  group: { type: String, required: true },
+  groupId: { type: mongoose.Schema.Types.ObjectId, ref: "Group", required: true },
+  projectId: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },
   steps: [stepSchema],
   dueDate: { type: String, required: true }
 })
