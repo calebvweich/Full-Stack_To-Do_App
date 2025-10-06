@@ -26,8 +26,6 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
   function handleDrop(e, newTaskId, newIndex) {
     const type = e.dataTransfer.getData("type")
     if (type === "step") {
-      const oldTask = e.dataTransfer.getData("oldTask")
-      const newTask = e.dataTransfer.getData("stepId")
       onReorderSteps(e.dataTransfer.getData("stepId"), e.dataTransfer.getData("oldTask"), newTaskId, newIndex)
       // Copy steps from current local state
       // const newSteps = [...taskState.steps];

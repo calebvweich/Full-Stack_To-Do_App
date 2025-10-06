@@ -69,12 +69,9 @@ export default function TaskPage() {
   };
 
   async function handleReorder(stepId, oldTaskId, newTaskId, newIndex) {
-    // GET TASKS FROM IDS
-    // SETTASKS PREVTASKS WITH CHECKS FOR OLDTASKID AND NEWTASKID
-    // IF OLDTASKID REMOVE STEPID
-    // IF NEWTASKID ADD STEPID AT NEWINDEX
     const oldTask = tasks.find(t => t._id === oldTaskId)
-    const newTask = newTaskId === oldTaskId ? { ...oldTask, steps: oldTask.steps.filter(s => s._id !== stepId)} : tasks.find(t => t._id === newTaskId)
+    const oldTaskSteps = oldTask.steps.filter(s => s._id !== stepId)
+    const newTask = newTaskId === oldTaskId ? { ...oldTask, steps: oldTaskSteps} : tasks.find(t => t._id === newTaskId)
     const step = oldTask.steps.find(s => s._id === stepId)
     newTask.steps.splice(newIndex, 0, step)
     setTasks(prev =>
@@ -82,30 +79,11 @@ export default function TaskPage() {
         task._id === newTaskId
           ? { ...task, steps: newTask.steps }
         : task._id === oldTaskId
-          ? { ...task, steps: task.steps.filter(s => s._id !== stepId) }
+          ? { ...task, steps: oldTaskSteps }
         : task
       )
     )
-
-
-
-
-    // if (oldTaskiD === taskState._id) {
-    //   console.log("Same Task")
-    //   console.log(newIndex)
-    // } else {
-    //   console.log("Different Task")
-    //   console.log(newIndex)
-    // }
-    // const newSteps = await reorderSteps(oldTaskId)
-    // const oldTaskSteps = []
-    // setTasks(prev =>
-    //   prev.map(task =>
-    //     task._id === oldTaskId
-    //       ? { ...task, steps: newSteps } // new array reference
-    //       : task
-    //   )
-    // )
+    reorderSteps(newTaskId === oldTaskId ? { [oldTaskId]: oldTaskSteps.map(s => s._id) } : { [oldTaskId]: oldTaskSteps.map(s => s._id), [newTaskId]: newTask.steps.map(s => s._id) }, stepId)
   }
 
   function filterTask(groupName) {
