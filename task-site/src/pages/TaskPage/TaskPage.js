@@ -9,7 +9,7 @@ import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask } from '../../api';
+import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus } from '../../api';
 import { toast } from '../../Components/Toast/Toast';
 
 export default function TaskPage() {
@@ -103,9 +103,19 @@ export default function TaskPage() {
     setSelectedStatus(prev => (prev === status ? "" : status));
   }
 
+  function changeStatus(taskId, status) {
+    setTaskStatus(taskId, status);
+    setTasks(prevTasks =>
+      prevTasks.map(task =>
+        task._id === taskId
+          ? {...task, status: status}
+          : task
+      )
+    )
+  }
+
   // Step Functions
   async function addStep(taskId, step) {
-    console.log(step, taskId)
     const newStep = await addStepToTask(taskId, step);
     setTasks(prevTasks => 
       prevTasks.map(task =>
@@ -184,7 +194,7 @@ export default function TaskPage() {
                 key={group._id}
                 group={group}
                 manageMode={manageMode}
-                taskDeletion={handleDelete}
+                groupDeletion={handleDelete}
                 onTaskDrop={handleTaskDrop}
               >
                 {filterTask(group.name) ? filterTask(group.name).map((task) => {
@@ -198,6 +208,7 @@ export default function TaskPage() {
                       onReorderSteps={handleReorder}
                       addStep={addStep}
                       toggleStep={toggleStep}
+                      updateStatus={changeStatus}
                     />
                   )
                 })
@@ -221,6 +232,9 @@ export default function TaskPage() {
               statusOptions={statusOptions}
               taskDeletion={handleDelete}
               onReorderSteps={handleReorder}
+              addStep={addStep}
+              toggleStep={toggleStep}
+              updateStatus={changeStatus}
             />
           )
         })}
