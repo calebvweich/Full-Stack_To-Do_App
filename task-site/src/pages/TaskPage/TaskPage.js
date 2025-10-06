@@ -68,15 +68,22 @@ export default function TaskPage() {
     }
   };
 
-  async function handleReorder(taskId, newOrder) {
-    const newSteps = await reorderSteps(taskId, newOrder)
+  async function handleReorder(stepId, oldTaskId, newTaskId, newIndex) {
+    const oldTask = tasks.find(t => t._id === oldTaskId)
+    const oldTaskSteps = oldTask.steps.filter(s => s._id !== stepId)
+    const newTask = newTaskId === oldTaskId ? { ...oldTask, steps: oldTaskSteps} : tasks.find(t => t._id === newTaskId)
+    const step = oldTask.steps.find(s => s._id === stepId)
+    newTask.steps.splice(newIndex, 0, step)
     setTasks(prev =>
       prev.map(task =>
-        task._id === taskId
-          ? { ...task, steps: newSteps } // new array reference
-          : task
+        task._id === newTaskId
+          ? { ...task, steps: newTask.steps }
+        : task._id === oldTaskId
+          ? { ...task, steps: oldTaskSteps }
+        : task
       )
     )
+    reorderSteps(newTaskId === oldTaskId ? { [oldTaskId]: oldTaskSteps.map(s => s._id) } : { [oldTaskId]: oldTaskSteps.map(s => s._id), [newTaskId]: newTask.steps.map(s => s._id) }, stepId)
   }
 
   function filterTask(groupName) {

@@ -208,12 +208,12 @@ export async function reorderTasks(groupId, taskId) {
 }
 
 // Reorder Steps
-export async function reorderSteps(taskId, newOrder) {
+export async function reorderSteps(tasks, stepId) {
   try {
-    const res = await apiFetch (`${API_URL}/tasks/${taskId}/steps/reorder`, {
+    const res = await apiFetch (`${API_URL}/tasks/steps/reorder`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ order: newOrder })
+      body: JSON.stringify({ tasks: tasks, stepId: stepId })
     })
     if (res.ok) {
       const newSteps = await res.json()

@@ -102,34 +102,36 @@ router.patch("/:groupName/reorder/:taskId", async (req, res) => {
 })
 
 // Reorder Steps
-router.patch("/:taskId/steps/reorder", async (req, res) => {
+router.patch("/steps/reorder", async (req, res) => {
   try {
-    const { taskId } = req.params;
-    const { order } = req.body; // array of stepIds in new order
-
-    const currentTask = await task.findById(taskId);
-    if (!task) return res.status(404).json({ message: "Task not found" });
-
-    // update each step's order
-    order.forEach((stepId, index) => {
-      const step = currentTask.steps.id(stepId);
+    // { taskId: [stepsInOrder] }
+    const { tasks, stepId } = req.body; // array of stepIds in new order
+    const oldTaskId = Object.keys(tasks)[0];
+    const newTaskId = Object.keys(tasks)[1];
+    const oldTask = await task.findById(oldTaskId);
+    if (newTaskId) {
+      const newTask = await task.findById(newTaskId);
+      const step = oldTask.steps.filter(s => String(s._id) === stepId)[0]
+      oldTask.steps = oldTask.steps.filter(s => String(s._id) !== stepId)
+      newTask.steps.push(step)
+      tasks[newTaskId].forEach((stepId, index) => {
+        const step = newTask.steps.id(stepId);
+        if (step) {
+          step.order = index;
+        }
+      });
+      await newTask.save()
+    }
+    tasks[oldTaskId].forEach((stepId, index) => {
+      const step = oldTask.steps.id(stepId);
       if (step) {
         step.order = index;
       }
     });
-
-    await currentTask.save();
-
-    // return fresh array of plain objects with string _id
-    const steps = currentTask.steps
-      .sort((a, b) => a.order - b.order)
-      .map(step => ({
-        ...step.toObject(),
-        _id: step._id.toString()
-      }));
-
-    res.status(200).json(steps);
+    await oldTask.save()
+    res.status(200);
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -174,6 +176,7 @@ router.post("/:taskId/newStep", auth, async (req, res) => {
     currentTask.steps.push({ name: name, order: nextOrder });
     currentTask.steps.sort((a, b) => a.order - b.order)
     await currentTask.save();
+    console.log(currentTask)
     res.status(200).json(currentTask);
   } catch (err) {
     console.log(err)

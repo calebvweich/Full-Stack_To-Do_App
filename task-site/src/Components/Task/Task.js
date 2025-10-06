@@ -15,24 +15,26 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
   const [deleteInfo, setDeleteInfo] = useState(null)
 
   // Step drag
-  function handleDragStart(e, index) {
+  function handleDragStart(e, id, taskId) {
     e.stopPropagation();
     e.dataTransfer.setData("type", "step");
-    e.dataTransfer.setData("stepIndex", index);
+    e.dataTransfer.setData("stepId", id);
+    e.dataTransfer.setData("oldTask", taskId)
   };
 
   // Step Drop
-  function handleDrop(e, index) {
+  function handleDrop(e, newTaskId, newIndex) {
     const type = e.dataTransfer.getData("type")
     if (type === "step") {
-      const newIndex = e.dataTransfer.getData("stepIndex")
+      onReorderSteps(e.dataTransfer.getData("stepId"), e.dataTransfer.getData("oldTask"), newTaskId, newIndex)
       // Copy steps from current local state
-      const newSteps = [...taskState.steps];
-      const [moved] = newSteps.splice(newIndex, 1);
-      newSteps.splice(index, 0, moved);
+      // const newSteps = [...taskState.steps];
+      // const [moved] = newSteps.splice(newIndex, 1);
+      // newSteps.splice(index, 0, moved);
 
-      // Tell parent about new order
-      onReorderSteps(task._id, newSteps.map((s) => s._id));
+      // // Tell parent about new order
+      // console.log(newSteps)
+      // onReorderSteps(task._id, newSteps.map((s) => s._id));
     }
   };
 
@@ -116,9 +118,9 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
               className="step stepHover"
               onClick={() => manageMode ? setDeleteInfo({"object": step, type: "step", extra: taskState._id}) : toggleStep(index)}
               draggable
-              onDragStart={(e) => handleDragStart(e, index)}
+              onDragStart={(e) => handleDragStart(e, step._id, taskState._id)}
               onDragOver={(e) => e.preventDefault()} // allow drop
-              onDrop={(e) => handleDrop(e, index)}
+              onDrop={(e) => handleDrop(e, taskState._id, index)}
             >
               {step.name} 
               <div className={step.completed ? "checked checkbox" : "checkbox"}/>
