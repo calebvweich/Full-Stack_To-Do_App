@@ -202,6 +202,9 @@ export default function TaskPage() {
           </div>
         </div>
       </div>
+      <div className="projectName">
+        Project Name
+      </div>
       <div className="taskAreaContainer"
         onDrop={e => handleTaskDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"), "None")}
         onDragOver={e => e.preventDefault()}
