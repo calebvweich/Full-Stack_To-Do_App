@@ -129,18 +129,6 @@ router.patch("/steps/reorder", async (req, res) => {
       }
     });
     await oldTask.save()
-
-    //   Object.keys(tasks).map(async id => {
-    //   const currentTask = await task.findById(id);
-    //   tasks[id].forEach((stepId, index) => {
-    //     const step = currentTask.steps.id(stepId);
-    //     if (step) {
-    //       step.order = index;
-    //     }
-    //   });
-    //   console.log(currentTask)
-    //   await currentTask.save();
-    // })
     res.status(200);
   } catch (err) {
     console.log(err)
