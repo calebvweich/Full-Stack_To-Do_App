@@ -1,29 +1,29 @@
 .body {
   padding: 0 2rem;
   position: absolute;
-  top: 12%;
+  top: 12vh;
   bottom: 0;
   left: 0;
   right: 0;
 }
+.options {
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+  height: 8.8vh;
+  max-height: 8.8vh;
+}
 .taskAreaContainer {
   overflow: auto;
-  position: absolute;
-  padding-top: 2rem;
+  padding-top: 2vh;
   gap: 2rem;
-  top: 10%;
-  bottom: 0;
-  left: 2%;
-  right: 2%;
+  height: 77.2vh;
+  max-height: 77.2vh;
 }
 .taskArea {
-  position: absolute;
   display: flex;
   gap: 2rem;
-  top: 10%;
-  bottom: 15%;
-  left: 2%;
-  right: 2%;
+  max-height: 100%;
 }
 .filters {
   display: flex;
@@ -50,11 +50,6 @@
   padding: 1rem;
   background: #D9D5C9;
   border-radius: 25px;
-}
-.options {
-  display: flex;
-  justify-content: space-between;
-  max-width: 100%;
 }
 .newButton {
   padding: 1rem;
