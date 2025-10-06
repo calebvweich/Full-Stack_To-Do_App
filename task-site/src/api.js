@@ -252,7 +252,7 @@ export async function setTaskStatus(taskId, newStatus) {
 }
 
 // New Step
-export async function addStepToTask(task, newStep) {
+export async function addStepToTask(task, step) {
   try {
     const res = await apiFetch (`${API_URL}/tasks/${task}/newStep`, {
       method: "POST",
@@ -260,11 +260,11 @@ export async function addStepToTask(task, newStep) {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
-      body: JSON.stringify({ name: newStep })
+      body: JSON.stringify({ name: step })
     })
     if (res.ok) {
-      const updatedTask = await res.json()
-      return updatedTask;
+      const newStep = await res.json()
+      return newStep;
     } else {
       console.log(res)
     }

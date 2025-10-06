@@ -3,14 +3,10 @@ import "./Task.css"
 import { useState } from "react";
 import Progress from "../Progress/Progress";
 import Button from "../Button/Button";
-import { useEffect } from "react";
-import { addStepToTask, setTaskStatus, toggleStepCompletion } from "../../api";
 import { DeleteDialog } from "../Dialog/Delete/Delete";
 import { MdDeleteOutline } from "react-icons/md";
 
-export default function Task({task, manageMode, statusOptions, taskDeletion, onReorderSteps}) {
-  // Create local state for the task to enable re-rendering
-  const [taskState, setTaskState] = useState(task);
+export default function Task({task, manageMode, statusOptions, taskDeletion, onReorderSteps, addStep, updateStatus, toggleStep}) {
   const [newStep, setNewStep] = useState("")
   const [deleteInfo, setDeleteInfo] = useState(null)
 
@@ -27,47 +23,17 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
     const type = e.dataTransfer.getData("type")
     if (type === "step") {
       onReorderSteps(e.dataTransfer.getData("stepId"), e.dataTransfer.getData("oldTask"), newTaskId, newIndex)
-      // Copy steps from current local state
-      // const newSteps = [...taskState.steps];
-      // const [moved] = newSteps.splice(newIndex, 1);
-      // newSteps.splice(index, 0, moved);
-
-      // // Tell parent about new order
-      // console.log(newSteps)
-      // onReorderSteps(task._id, newSteps.map((s) => s._id));
     }
   };
 
-  // Handler function to toggle step completion
-  async function toggleStep(stepIndex) {
-    toggleStepCompletion(taskState._id, taskState.steps[stepIndex]._id)
-    setTaskState(prevTask => ({
-      ...prevTask,
-      steps: prevTask.steps.map((step, index) => 
-        index === stepIndex 
-          ? {...step, completed: !step.completed} 
-          : step
-      )
-    }));
-  };
-
-  // set new task status
-  async function updateStatus(newStatus) {
-    setTaskStatus(taskState._id, newStatus);
-    setTaskState(prevTask => ({
-      ...prevTask, status: newStatus
-    }))
-  }
-
   function handleTaskDragStart(e) {
     e.dataTransfer.setData("type", "task");
-    e.dataTransfer.setData("taskId", taskState._id);
+    e.dataTransfer.setData("taskId", task._id);
   };
 
-  async function addStep() {
+  async function handleNewStep() {
     if (newStep !== "") {
-      const updatedTask = await addStepToTask(taskState._id, newStep)
-      setTaskState(updatedTask)
+      addStep(task._id, newStep)
       setNewStep("")
     }
   }
@@ -84,10 +50,6 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
     return(done/total * 100)
   }
 
-  useEffect(() => {
-    setTaskState(task);
-  }, [task]);
-
   return(
     <div
       className="taskContainer"
@@ -96,31 +58,31 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
     >
       <div className="taskName">
         <div>
-          <div>{taskState.name}</div>
+          <div>{task.name}</div>
           {manageMode ? 
-            <select value={taskState.status} onChange={(e) => updateStatus(e.target.value)}>
+            <select value={task.status} onChange={(e) => updateStatus(task._id, e.target.value)}>
               {statusOptions.map((option, index) => {
                 return(
                   <option key={index} value={option}>{option}</option>
               )})}
             </select>
             :
-            <div>{taskState.status}</div>
+            <div>{task.status}</div>
           }
         </div>
-        {manageMode ? <Button text={<MdDeleteOutline />} onClick={() => setDeleteInfo({"object": taskState, type: "task"})} /> : <Progress pcent={pcentComplete(taskState)} />}
+        {manageMode ? <Button text={<MdDeleteOutline />} onClick={() => setDeleteInfo({"object": task, type: "task"})} /> : <Progress pcent={pcentComplete(task)} />}
       </div>
       <div className="stepsList">
-        {taskState.steps.map((step, index) => {
+        {task.steps.map((step, index) => {
           return(
             <div
               key={index}
               className="step stepHover"
-              onClick={() => manageMode ? setDeleteInfo({"object": step, type: "step", extra: taskState._id}) : toggleStep(index)}
+              onClick={() => manageMode ? setDeleteInfo({"object": step, type: "step", extra: task._id}) : toggleStep(task._id, step._id)}
               draggable
-              onDragStart={(e) => handleDragStart(e, step._id, taskState._id)}
+              onDragStart={(e) => handleDragStart(e, step._id, task._id)}
               onDragOver={(e) => e.preventDefault()} // allow drop
-              onDrop={(e) => handleDrop(e, taskState._id, index)}
+              onDrop={(e) => handleDrop(e, task._id, index)}
             >
               {step.name} 
               <div className={step.completed ? "checked checkbox" : "checkbox"}/>
@@ -134,7 +96,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
           value={newStep}
           onChange={(e) => setNewStep(e.target.value)}
         />
-        <button type="button" onClick={addStep}>+</button>
+        <button type="button" onClick={() => handleNewStep()}>+</button>
       </div>
       {deleteInfo &&
         <DeleteDialog
