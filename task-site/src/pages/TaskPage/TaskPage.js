@@ -9,7 +9,7 @@ import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus } from '../../api';
+import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup } from '../../api';
 import { toast } from '../../Components/Toast/Toast';
 
 export default function TaskPage() {
@@ -33,6 +33,26 @@ export default function TaskPage() {
     const taskRes = await getTasks()
     if (taskRes) {
       setTasks(taskRes)
+    }
+  }
+
+  async function addTask(name,group,steps,dueDate) {
+    const res = await newTask(name,group,steps,dueDate);
+    if (res) {
+      console.log(res)
+      setTasks([ ...tasks, res ])
+    } else {
+      console.log("Failed: ", res);
+    }
+  }
+
+  async function addGroup(name) {
+    const res = await newGroup(name);
+    if (res) {
+      console.log(res)
+      setGroups([ ...groups, res ])
+    } else {
+      console.log("Failed: ", res);
     }
   }
 
@@ -187,7 +207,7 @@ export default function TaskPage() {
         onDragOver={e => e.preventDefault()}
       >
       <div className="taskArea">
-        {groups.map((group) => {
+        {groups.length > 0 && groups.map((group) => {
           if ((selectedGroups.includes(group.name) || selectedGroups.length === 0)) {
             return(
               <Group
@@ -245,6 +265,8 @@ export default function TaskPage() {
           close={() => setDialogOpen(false)}
           tab={dialogTab}
           setTab={setDialogTab}
+          addTask={addTask}
+          addGroup={addGroup}
         />
       )}
     </div>

@@ -3,7 +3,7 @@ import "./NewTask.css"
 import { newGroup, newTask, getGroups } from "../../../api"
 import Dialog from "../Dialog"
 
-function TaskForm({steps, close}) {
+function TaskForm({steps, close, addTask}) {
   const [name, setName] = useState("")
   const [step, setStep] = useState("")
   const [group, setGroup] = useState("None")
@@ -22,13 +22,8 @@ function TaskForm({steps, close}) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const res = await newTask(name,group,steps,dueDate);
-    if (res) {
-      console.log(res)
-      close();
-    } else {
-      console.log("Failed: ", res);
-    }
+    addTask(name,group,steps,dueDate)
+    close();
   }
 
   function addStep() {
@@ -83,18 +78,13 @@ function TaskForm({steps, close}) {
   )
 }
 
-function GroupForm({close}) {
+function GroupForm({close, addGroup}) {
   const [name, setName] = useState("")
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const res = await newGroup(name);
-    if (res) {
-      console.log(res)
-      close();
-    } else {
-      console.log("Failed: ", res);
-    }
+    addGroup(name)
+    close();
   }
 
   return(
@@ -131,7 +121,7 @@ function NewTaskHeader({tab, setTab}) {
   )
 }
 
-export function NewTask({close, tab, setTab}) {
+export function NewTask({close, tab, setTab, addTask, addGroup}) {
   const steps = []
   return(
     <Dialog
@@ -139,9 +129,9 @@ export function NewTask({close, tab, setTab}) {
       title={<NewTaskHeader tab={tab} setTab={setTab} />}
       content={
         tab === "Task" ?
-          <TaskForm steps={steps} close={close} />
+          <TaskForm steps={steps} close={close} addTask={addTask} />
           :
-          <GroupForm close={close} />
+          <GroupForm close={close} addGroup={addGroup} />
       }
     />
   )
