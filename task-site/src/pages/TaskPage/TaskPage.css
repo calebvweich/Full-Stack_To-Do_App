@@ -13,13 +13,14 @@
   height: 8.8vh;
   max-height: 8.8vh;
 }
-.projectName {
-  padding-left: 2vw;
+.projectContainer {
   height: 7vh;
   max-height: 7vh;
   display: flex;
-  align-items: center;
-  justify-content: left;
+  align-items: center;  
+}
+.projectName {
+  padding: 0 2vw;
   font-size: 3vh;
 }
 .taskAreaContainer {

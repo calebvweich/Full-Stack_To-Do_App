@@ -20,6 +20,7 @@ export default function TaskPage() {
   const [dialogTab, setDialogTab] = useState("Task")
   const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
   const [manageMode, setManageMode] = useState(false)
+  const [currentProject, setCurrentProject] = useState(null)
   // DB
   const [tasks, setTasks] = useState([])
   const [groups, setGroups] = useState([])
@@ -28,6 +29,7 @@ export default function TaskPage() {
   //FUNCTIONS
   async function getUserTasks() {
     const projectRes = await getProjects()
+    setCurrentProject(projectRes[0])
     setProjects(projectRes)
     console.log(projectRes)
     const groupRes = await getGroups()
@@ -206,8 +208,12 @@ export default function TaskPage() {
           </div>
         </div>
       </div>
-      <div className="projectName">
-        Project Name
+      <div className="projectContainer">
+        {projects.map(project => (
+          <div className="projectName">
+            {project.name}
+          </div>
+        ))}
       </div>
       <div className="taskAreaContainer"
         onDrop={e => handleTaskDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"), "None")}
