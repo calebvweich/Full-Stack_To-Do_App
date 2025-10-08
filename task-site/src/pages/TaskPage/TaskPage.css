@@ -23,6 +23,9 @@
   padding: 0 2vw;
   font-size: 3vh;
 }
+.projectList {
+  display: flex;
+}
 .projectActive {
   /* active project styles */
 }

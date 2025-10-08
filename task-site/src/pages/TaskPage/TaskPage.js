@@ -40,10 +40,6 @@ export default function TaskPage() {
     setTasks(project.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
   }
 
-  function getProjectData(projectId) {
-    setCurrentProject(projects.find(p => p._id === projectId))
-  }
-
   async function addTask(name,group,steps,dueDate) {
     const res = await newTask(name,group,currentProject._id,steps,dueDate);
     if (res) {
@@ -212,7 +208,7 @@ export default function TaskPage() {
       <div className="projectContainer">
         <div className="projectList">
           {projects.map(project => (
-            <div className="projectName" onClick={() => getProjectData(project._id)}>
+            <div className="projectName" onClick={() => getProject(project._id)}>
               {project.name}
             </div>
           ))}
