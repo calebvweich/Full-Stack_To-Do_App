@@ -85,7 +85,7 @@ export default function TaskPage() {
       reorderTasks(newGroupId, taskId)
       setTasks(prev =>
         prev.map(task =>
-          task._id === taskId ? { ...task, groupId: newGroupId } : task
+          task._id === taskId ? { ...task, groupId: newGroupId === "None" ? null : newGroupId } : task
         )
       );
     }

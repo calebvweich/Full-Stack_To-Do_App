@@ -114,8 +114,8 @@ router.get("/projects/get", auth, async (req, res) => {
 router.delete("/task/:id", async (req, res) => {
   try {
     const currentTask = await task.findById(req.params.id);
-    await group.findByIdAndUpdate(currentTask.groupId, { $pull: { tasks: req.params.id } }, { new: true });
-    await project.findByIdAndUpdate(currentTask.projectId, { $pull: { tasks: req.params.id } }, { new: true });
+    await group.findByIdAndUpdate(currentTask.groupId, { $pull: { tasks: req.params.id } });
+    await project.findByIdAndUpdate(currentTask.projectId, { $pull: { tasks: req.params.id } });
     await task.findByIdAndDelete(req.params.id);
     res.json({ message: "Task deleted" });
   } catch (err) {
@@ -129,10 +129,10 @@ router.delete("/group/:id", async (req, res) => {
     const currentGroup = await group.findById(req.params.id)
     const currentTasks = await task.find({ "groupId": { $eq: currentGroup._id }})
     currentTasks.forEach(async toDel => {
-      await project.findByIdAndUpdate(toDel.projectId, { $pull: { tasks: toDel._id } }, { new: true });
+      await project.findByIdAndUpdate(toDel.projectId, { $pull: { tasks: toDel._id } });
       await task.findByIdAndDelete(toDel._id)
     })
-    await project.findByIdAndUpdate(currentGroup.projectId, { $pull: { groups: req.params.id } }, { new: true });
+    await project.findByIdAndUpdate(currentGroup.projectId, { $pull: { groups: req.params.id } });
     await group.findByIdAndDelete(req.params.id);
     res.json({ message: "Group deleted" });
   } catch (err) {
@@ -161,14 +161,13 @@ router.delete("/project/delete/:id", async (req, res) => {
 
 // Reorder Tasks
 router.patch("/:groupId/reorder/:taskId", async (req, res) => {
+  // ALLOW NULL VALUE
   try {
     const { groupId, taskId } = req.params;
     const currentTask = await task.findById(taskId);
-    const prevGroup = await group.findByIdAndUpdate(currentTask.groupId, { $pull: { tasks: taskId } }, { new: true });
-    console.log(prevGroup)
-    const newGroup = await group.findByIdAndUpdate(groupId, { $push: { tasks: taskId } }, { new: true });
-    console.log(newGroup)
-    currentTask.groupId = groupId;
+    await group.findByIdAndUpdate(currentTask.groupId, { $pull: { tasks: taskId } });
+    groupId !== "None" && await group.findByIdAndUpdate(groupId, { $push: { tasks: taskId } });
+    currentTask.groupId = groupId === "None" ? null : groupId;
     await currentTask.save();
     res.status(200);
   } catch (err) {
