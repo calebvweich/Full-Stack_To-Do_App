@@ -9,15 +9,23 @@ const router = express.Router();
 // New Task
 router.post("/newTask", auth, async (req, res) => {
   try {
-    const { name, group, steps, dueDate } = req.body;
+    const { name, groupId, projectId, steps, dueDate } = req.body;
+    console.log(groupId)
     const newTask = new task({
       userId: req.user.id,
       name: name,
       status: "Not-Started",
-      groupId: group,
+      groupId: groupId === "None" ? null : groupId,
+      projectId: projectId,
       steps: steps,
       dueDate: dueDate,
     })
+    groupId !== "None" && await group.findByIdAndUpdate(groupId, {
+      $push: { tasks: newTask._id }
+    })
+    await project.findByIdAndUpdate(projectId, {
+      $push: { tasks: newTask._id },
+    });
     await newTask.save();
     res.status(201).json(newTask);
   } catch (err) {
@@ -28,11 +36,15 @@ router.post("/newTask", auth, async (req, res) => {
 // New Group
 router.post("/newGroup", auth, async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, projectId } = req.body;
     const newGroup = new group({
       userId: req.user.id,
-      name: name
+      name: name,
+      projectId: projectId,
     })
+    await project.findByIdAndUpdate(projectId, {
+      $push: { groups: newGroup._id },
+    });
     await newGroup.save();
     res.status(201).json(newGroup)
   } catch (err) {
@@ -83,6 +95,16 @@ router.get("/getGroups", auth, async (req, res) => {
 router.get("/projects/get", auth, async (req, res) => {
   try {
     const userProjects = await project.find({ userId: req.user.id })
+    .populate({
+      path: "groups",
+      populate: {
+        path: "tasks"
+      }
+    })
+    .populate({
+      path: "tasks",
+      match: { groupId: { $in: [null, undefined] } },
+    })
     res.status(200).json(userProjects)
   } catch (err) {
     console.log(err)

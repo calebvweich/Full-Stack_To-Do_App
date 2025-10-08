@@ -23,6 +23,9 @@
   padding: 0 2vw;
   font-size: 3vh;
 }
+.projectActive {
+  /* active project styles */
+}
 .taskAreaContainer {
   overflow: auto;
   gap: 2rem;

@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const projectSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     name: { type: String, required: true },
+    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
+    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
 });
 
 projectSchema.index({ userId: 1, name: 1 }, { unique: true });

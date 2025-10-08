@@ -71,7 +71,7 @@ export async function login(username, password) {
 
 // -----TASKS------
 // New Task
-export async function newTask(name, group, steps, dueDate) {
+export async function newTask(name, groupId, projectId, steps, dueDate) {
   try {
     steps.forEach((step, index) => {
       step.order = index
@@ -82,7 +82,7 @@ export async function newTask(name, group, steps, dueDate) {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
-      body: JSON.stringify({ name, group, steps, dueDate })
+      body: JSON.stringify({ name, groupId, projectId, steps, dueDate })
     });
     const data = await res.json();
 
@@ -93,7 +93,7 @@ export async function newTask(name, group, steps, dueDate) {
 }
 
 // New Group
-export async function newGroup(name) {
+export async function newGroup(name, projectId) {
   try {
     const res = await apiFetch(`${API_URL}/tasks/newGroup`, {
       method: "POST",
@@ -101,7 +101,7 @@ export async function newGroup(name) {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
-      body: JSON.stringify({ name })
+      body: JSON.stringify({ name, projectId })
     });
     const data = await res.json();
 

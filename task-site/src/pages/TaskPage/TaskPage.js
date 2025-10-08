@@ -31,29 +31,39 @@ export default function TaskPage() {
     const projectRes = await getProjects()
     setCurrentProject(projectRes[0])
     setProjects(projectRes)
+    setGroups(projectRes[0].groups)
+    setTasks(projectRes[0].tasks)
     console.log(projectRes)
-    const groupRes = await getGroups()
-    if (groupRes) {
-      setGroups(groupRes)
-    }
-    const taskRes = await getTasks()
-    if (taskRes) {
-      setTasks(taskRes)
-    }
+  }
+
+  function getProjectData(projectId) {
+    setCurrentProject(projects.find(p => p._id === projectId))
   }
 
   async function addTask(name,group,steps,dueDate) {
-    const res = await newTask(name,group,steps,dueDate);
+    const res = await newTask(name,group,currentProject._id,steps,dueDate);
     if (res) {
       console.log(res)
-      setTasks([ ...tasks, res ])
+      groups.forEach(prev => prev._id === group ? console.log("None") : console.log(group))
+      group === "None" ?
+        setTasks([ ...tasks, res ])
+      : setGroups(prevGroups =>
+          prevGroups.map(prev =>
+            prev._id === group
+            ? {
+              ...prev,
+              tasks: [...prev.tasks, res]
+              }
+            : prev
+          )
+        )
     } else {
       console.log("Failed: ", res);
     }
   }
 
   async function addGroup(name) {
-    const res = await newGroup(name);
+    const res = await newGroup(name, currentProject._id);
     if (res) {
       console.log(res)
       setGroups([ ...groups, res ])
@@ -177,6 +187,7 @@ export default function TaskPage() {
     <div className="body">
       <div className="options">
         <div className="filterContainer">
+          {console.log(groups)}
           {groups.length > 0 &&
             <div className="filterType">
               <div className="filters">
@@ -209,11 +220,14 @@ export default function TaskPage() {
         </div>
       </div>
       <div className="projectContainer">
-        {projects.map(project => (
-          <div className="projectName">
-            {project.name}
-          </div>
-        ))}
+        <div className="projectList">
+          {projects.map(project => (
+            <div className="projectName" onClick={() => getProjectData(project._id)}>
+              {project.name}
+            </div>
+          ))}
+        </div>
+        <div>+</div>
       </div>
       <div className="taskAreaContainer"
         onDrop={e => handleTaskDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"), "None")}
@@ -230,7 +244,7 @@ export default function TaskPage() {
                 groupDeletion={handleDelete}
                 onTaskDrop={handleTaskDrop}
               >
-                {filterTask(group._id) ? filterTask(group._id).map((task) => {
+                {group.tasks.map((task) => {
                   return(
                     <Task
                       key={task._id}
@@ -244,10 +258,7 @@ export default function TaskPage() {
                       updateStatus={changeStatus}
                     />
                   )
-                })
-                  :
-                  <div>None</div>
-                }
+                })}
               </Group>
             )
           } else {
@@ -256,7 +267,7 @@ export default function TaskPage() {
             )
           }
         })}
-        {!selectedGroups && filterTask("None").map((task) => {
+        {!selectedGroups.length && tasks.map((task) => {
           return(
             <Task
               key={task._id}
