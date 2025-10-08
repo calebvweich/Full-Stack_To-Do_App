@@ -29,11 +29,15 @@ export default function TaskPage() {
   //FUNCTIONS
   async function getUserTasks() {
     const projectRes = await getProjects()
-    setCurrentProject(projectRes[0])
     setProjects(projectRes)
-    setGroups(projectRes[0].groups)
-    setTasks(projectRes[0].tasks)
-    console.log(projectRes)
+    getProject(projectRes[0]._id, projectRes)
+  }
+
+  function getProject(id, datasource = projects) {
+    const project = datasource.find(p => p._id === id)
+    setCurrentProject(project)
+    setGroups(project.groups)
+    setTasks(project.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
   }
 
   function getProjectData(projectId) {
@@ -43,20 +47,7 @@ export default function TaskPage() {
   async function addTask(name,group,steps,dueDate) {
     const res = await newTask(name,group,currentProject._id,steps,dueDate);
     if (res) {
-      console.log(res)
-      groups.forEach(prev => prev._id === group ? console.log("None") : console.log(group))
-      group === "None" ?
-        setTasks([ ...tasks, res ])
-      : setGroups(prevGroups =>
-          prevGroups.map(prev =>
-            prev._id === group
-            ? {
-              ...prev,
-              tasks: [...prev.tasks, res]
-              }
-            : prev
-          )
-        )
+      setTasks([ ...tasks, res ])
     } else {
       console.log("Failed: ", res);
     }
@@ -65,7 +56,6 @@ export default function TaskPage() {
   async function addGroup(name) {
     const res = await newGroup(name, currentProject._id);
     if (res) {
-      console.log(res)
       setGroups([ ...groups, res ])
     } else {
       console.log("Failed: ", res);
@@ -110,17 +100,18 @@ export default function TaskPage() {
     const oldTaskSteps = oldTask.steps.filter(s => s._id !== stepId)
     const newTask = newTaskId === oldTaskId ? { ...oldTask, steps: oldTaskSteps} : tasks.find(t => t._id === newTaskId)
     const step = oldTask.steps.find(s => s._id === stepId)
-    newTask.steps.splice(newIndex, 0, step)
+    const newTaskSteps = [...newTask.steps]
+    newTaskSteps.splice(newIndex, 0, step)
     setTasks(prev =>
       prev.map(task =>
         task._id === newTaskId
-          ? { ...task, steps: newTask.steps }
+          ? { ...task, steps: newTaskSteps }
         : task._id === oldTaskId
           ? { ...task, steps: oldTaskSteps }
         : task
       )
     )
-    reorderSteps(newTaskId === oldTaskId ? { [oldTaskId]: oldTaskSteps.map(s => s._id) } : { [oldTaskId]: oldTaskSteps.map(s => s._id), [newTaskId]: newTask.steps.map(s => s._id) }, stepId)
+    reorderSteps(newTaskId === oldTaskId ? { [newTaskId]: newTaskSteps.map(s => s._id) } : { [oldTaskId]: oldTaskSteps.map(s => s._id), [newTaskId]: newTaskSteps.map(s => s._id) }, stepId)
   }
 
   function filterTask(groupId) {
@@ -187,7 +178,6 @@ export default function TaskPage() {
     <div className="body">
       <div className="options">
         <div className="filterContainer">
-          {console.log(groups)}
           {groups.length > 0 &&
             <div className="filterType">
               <div className="filters">
@@ -244,7 +234,7 @@ export default function TaskPage() {
                 groupDeletion={handleDelete}
                 onTaskDrop={handleTaskDrop}
               >
-                {group.tasks.map((task) => {
+                {tasks.filter(t => t.groupId === group._id && (t.status === selectedStatus || selectedStatus === "")).map((task) => {
                   return(
                     <Task
                       key={task._id}
@@ -267,7 +257,7 @@ export default function TaskPage() {
             )
           }
         })}
-        {!selectedGroups.length && tasks.map((task) => {
+        {!selectedGroups.length && tasks.filter(t => !t.groupId && t.status === selectedStatus).map((task) => {
           return(
             <Task
               key={task._id}

@@ -10,7 +10,6 @@ const router = express.Router();
 router.post("/newTask", auth, async (req, res) => {
   try {
     const { name, groupId, projectId, steps, dueDate } = req.body;
-    console.log(groupId)
     const newTask = new task({
       userId: req.user.id,
       name: name,
@@ -103,7 +102,6 @@ router.get("/projects/get", auth, async (req, res) => {
     })
     .populate({
       path: "tasks",
-      match: { groupId: { $in: [null, undefined] } },
     })
     res.status(200).json(userProjects)
   } catch (err) {
