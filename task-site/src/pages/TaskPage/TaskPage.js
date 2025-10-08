@@ -253,7 +253,7 @@ export default function TaskPage() {
             )
           }
         })}
-        {!selectedGroups.length && tasks.filter(t => !t.groupId && t.status === selectedStatus).map((task) => {
+        {!selectedGroups.length && tasks.filter(t => !t.groupId && (t.status === selectedStatus || selectedStatus === "")).map((task) => {
           return(
             <Task
               key={task._id}
@@ -274,6 +274,7 @@ export default function TaskPage() {
         <NewTask
           close={() => setDialogOpen(false)}
           tab={dialogTab}
+          groupList={groups}
           setTab={setDialogTab}
           addTask={addTask}
           addGroup={addGroup}
