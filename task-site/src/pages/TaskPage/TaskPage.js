@@ -82,10 +82,10 @@ export default function TaskPage() {
 
   async function handleTaskDrop(type, taskId, newGroupId) {
     if (type === "task") {
-      const newGroup = await reorderTasks(newGroupId, taskId)
+      reorderTasks(newGroupId, taskId)
       setTasks(prev =>
         prev.map(task =>
-          task._id === taskId ? { ...task, group: newGroup } : task
+          task._id === taskId ? { ...task, groupId: newGroupId } : task
         )
       );
     }
@@ -108,10 +108,6 @@ export default function TaskPage() {
       )
     )
     reorderSteps(newTaskId === oldTaskId ? { [newTaskId]: newTaskSteps.map(s => s._id) } : { [oldTaskId]: oldTaskSteps.map(s => s._id), [newTaskId]: newTaskSteps.map(s => s._id) }, stepId)
-  }
-
-  function filterTask(groupId) {
-    return(tasks.filter(task => task.groupId === groupId && (task.status === selectedStatus || selectedStatus === "")))
   }
 
   function toggleSelect(groupName) {

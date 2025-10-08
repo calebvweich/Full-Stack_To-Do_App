@@ -113,6 +113,9 @@ router.get("/projects/get", auth, async (req, res) => {
 // Delete Task
 router.delete("/task/:id", async (req, res) => {
   try {
+    const currentTask = await task.findById(req.params.id);
+    await group.findByIdAndUpdate(currentTask.groupId, { $pull: { tasks: req.params.id } }, { new: true });
+    await project.findByIdAndUpdate(currentTask.projectId, { $pull: { tasks: req.params.id } }, { new: true });
     await task.findByIdAndDelete(req.params.id);
     res.json({ message: "Task deleted" });
   } catch (err) {
@@ -124,10 +127,12 @@ router.delete("/task/:id", async (req, res) => {
 router.delete("/group/:id", async (req, res) => {
   try {
     const currentGroup = await group.findById(req.params.id)
-    const currentTasks = await task.find({ "group": { $eq: currentGroup._id }})
+    const currentTasks = await task.find({ "groupId": { $eq: currentGroup._id }})
     currentTasks.forEach(async toDel => {
+      await project.findByIdAndUpdate(toDel.projectId, { $pull: { tasks: toDel._id } }, { new: true });
       await task.findByIdAndDelete(toDel._id)
     })
+    await project.findByIdAndUpdate(currentGroup.projectId, { $pull: { groups: req.params.id } }, { new: true });
     await group.findByIdAndDelete(req.params.id);
     res.json({ message: "Group deleted" });
   } catch (err) {
@@ -138,6 +143,14 @@ router.delete("/group/:id", async (req, res) => {
 // Delete Project
 router.delete("/project/delete/:id", async (req, res) => {
   try {
+    const currentTasks = await task.find({ "projectId": { $eq: req.params.id }})
+    currentTasks.forEach(async toDel => {
+      await task.findByIdAndDelete(toDel._id)
+    })
+    const currentGroups = await group.find({ "projectId": { $eq: req.params.id }})
+    currentGroups.forEach(async toDel => {
+      await group.findByIdAndDelete(toDel._id)
+    })
     await project.findOneAndDelete({ _id: id })
     res.json({ message: "Project deleted" })
   } catch (err) {
@@ -147,15 +160,19 @@ router.delete("/project/delete/:id", async (req, res) => {
 })
 
 // Reorder Tasks
-router.patch("/:groupName/reorder/:taskId", async (req, res) => {
+router.patch("/:groupId/reorder/:taskId", async (req, res) => {
   try {
-    const { groupName, taskId } = req.params;
+    const { groupId, taskId } = req.params;
     const currentTask = await task.findById(taskId);
-    currentTask.group = groupName;
+    const prevGroup = await group.findByIdAndUpdate(currentTask.groupId, { $pull: { tasks: taskId } }, { new: true });
+    console.log(prevGroup)
+    const newGroup = await group.findByIdAndUpdate(groupId, { $push: { tasks: taskId } }, { new: true });
+    console.log(newGroup)
+    currentTask.groupId = groupId;
     await currentTask.save();
-    res.status(200).json(groupName);
-    // delete task, push task to group
+    res.status(200);
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: "Server error" });
   }
 })
