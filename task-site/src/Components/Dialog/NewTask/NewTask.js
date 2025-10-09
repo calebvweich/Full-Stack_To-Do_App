@@ -57,7 +57,7 @@ function TaskForm({steps, close, groupList, addTask}) {
         onChange={(e) => (setDueDate(e.target.value))}
       />
       <div className="button">
-        <button type="submit" className="inputButton">Submit</button>
+        <button type="submit">Submit</button>
       </div>
     </form>
   )
@@ -81,7 +81,7 @@ function GroupForm({close, addGroup}) {
         onChange={(e) => setName(e.target.value)}
       />
       <div className="button">
-        <button type="submit" className="inputButton">Submit</button>
+        <button type="submit">Submit</button>
       </div>
     </form>
   )

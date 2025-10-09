@@ -1,4 +1,3 @@
-import Button from "../../Button/Button"
 import Dialog from "../Dialog"
 import "./Delete.css"
 
@@ -25,7 +24,7 @@ export function DeleteDialog({ toDelete, handleDelete, close }) {
             This action cannot be undone.
           </div>
           <div className="buttons">
-            <button onClick={() => deleteObject()} className="inputButton">Delete</button>
+            <button onClick={() => deleteObject()}>Delete</button>
           </div>
         </div>
       }

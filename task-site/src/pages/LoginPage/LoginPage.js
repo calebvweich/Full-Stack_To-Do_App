@@ -33,7 +33,7 @@ function Login({validate}) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div className="button">
-        <button type="submit" className="inputButton">Login</button>
+        <button type="submit">Login</button>
       </div>
     </form>
   )
@@ -77,7 +77,7 @@ function Register({validate}) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div className="button">
-        <button type="submit" className="inputButton">Register</button>
+        <button type="submit">Register</button>
       </div>
     </form>
   )

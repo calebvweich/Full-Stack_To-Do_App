@@ -2,7 +2,6 @@
 import './TaskPage.css';
 
 // COMPONENTS
-import Button from '../../Components/Button/Button';
 import Task from '../../Components/Task/Task';
 import Group from '../../Components/Group/Group';
 import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
@@ -186,7 +185,7 @@ export default function TaskPage() {
             <div className="filters">
               {statusOptions.map((name, index) => {
                 return(
-                  <div key={index} className={`${selectedStatus === name && "active"} filter`} onClick={() => changeStatusFilter(name)}>{name}</div>
+                  <button key={index} className={`${selectedStatus === name && "active"}`} onClick={() => changeStatusFilter(name)}>{name}</button>
                 )
               })}
             </div>
@@ -196,8 +195,8 @@ export default function TaskPage() {
         <div className="newButton">
           Manage Tasks
           <div className="manageButtons">
-            <Button text={"New"} onClick={() => setDialogOpen(true)} />
-            <Button text={"Manage"} onClick={() => setManageMode(!manageMode)} />
+            <button onClick={() => setDialogOpen(true)}>New</button>
+            <button onClick={() => setManageMode(!manageMode)}>Manage</button>
           </div>
         </div>
       </div>

@@ -49,8 +49,29 @@ input {
   border: none;
 }
 button {
-  border: none;
-  padding: 0.4rem 1rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #4A4A4A;
+  margin: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+  background: none;
+  font-size: 1rem;
+}
+button.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.appHeader {
+  button {
+    color: white;
+    border: 1px solid white;
+  }
+}
+select {
   background: #D9D5C9;
+  border: none;
   border-radius: 10px;
+  padding: .4rem 1.2rem;
 }

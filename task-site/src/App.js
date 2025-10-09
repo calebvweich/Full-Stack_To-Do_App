@@ -1,9 +1,6 @@
 // CSS
 import './App.css';
 
-// COMPONENTS
-import Button from './Components/Button/Button';
-
 // PAGES
 import TaskPage from "./pages/TaskPage/TaskPage"
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -42,11 +39,11 @@ function App() {
         <div className="app">
           <header className="appHeader">
             <div className="account">
-              <Button text={"Account"} onClick={() => newProject("Default")} />
+              <button>Account</button>
               <div className="headerText">Welcome Name</div>
             </div>
             <div className="logoutButton">
-              <Button text={"Log Out"} onClick={logout} />
+              <button onClick={logout}>Log Out</button>
             </div>
           </header>
           <Routes>

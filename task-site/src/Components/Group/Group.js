@@ -1,7 +1,5 @@
 import "./Group.css"
 
-import Task from "../Task/Task"
-import Button from "../Button/Button"
 import { useState } from "react"
 import { DeleteDialog } from "../Dialog/Delete/Delete"
 import { MdDeleteOutline } from "react-icons/md";
@@ -21,7 +19,7 @@ export default function Group({group, manageMode, groupDeletion, onTaskDrop, chi
         onDragOver={e => e.preventDefault()}
       >
           {group.name}
-          {manageMode && <Button text={<MdDeleteOutline />} onClick={() => setDeleteInfo({"object": group, "type": "group", "extra": null})} />}
+          {manageMode && <button onClick={() => setDeleteInfo({"object": group, "type": "group", "extra": null})}><MdDeleteOutline /></button>}
       </div>
       <div className="groupedTasks"
         onDrop={e => handleDrop(e, e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"))}
