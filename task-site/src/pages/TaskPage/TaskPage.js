@@ -8,10 +8,10 @@ import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup, getProjects } from '../../api';
+import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup, getProject } from '../../api';
 import { toast } from '../../Components/Toast/Toast';
 
-export default function TaskPage() {
+export default function TaskPage({ currentProject }) {
   // VARIABLES
   const [selectedGroups, setSelectedGroups] = useState([])
   const [selectedStatus, setSelectedStatus] = useState("")
@@ -19,25 +19,27 @@ export default function TaskPage() {
   const [dialogTab, setDialogTab] = useState("Task")
   const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
   const [manageMode, setManageMode] = useState(false)
-  const [currentProject, setCurrentProject] = useState(null)
+  // const [currentProject, setCurrentProject] = useState(null)
   // DB
   const [tasks, setTasks] = useState([])
   const [groups, setGroups] = useState([])
-  const [projects, setProjects] = useState([])
+  // const [projects, setProjects] = useState([])
 
   //FUNCTIONS
   async function getUserTasks() {
-    const projectRes = await getProjects()
-    setProjects(projectRes)
-    getProject(projectRes[0]._id, projectRes)
+    console.log(currentProject)
+    const projectRes = await getProject(currentProject)
+    console.log(projectRes)
+    setGroups(projectRes.groups)
+    setTasks(projectRes.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
   }
 
-  function getProject(id, datasource = projects) {
-    const project = datasource.find(p => p._id === id)
-    setCurrentProject(project)
-    setGroups(project.groups)
-    setTasks(project.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
-  }
+  // function getProject(id) {
+  //   const project = datasource.find(p => p._id === id)
+  //   setCurrentProject(project)
+  //   setGroups(project.groups)
+  //   setTasks(project.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
+  // }
 
   async function addTask(name,group,steps,dueDate) {
     const res = await newTask(name,group,currentProject._id,steps,dueDate);
@@ -200,7 +202,7 @@ export default function TaskPage() {
           </div>
         </div>
       </div>
-      <div className="projectContainer">
+      {/* <div className="projectContainer">
         <div className="projectList">
           {projects.map(project => (
             <div className="projectName" onClick={() => getProject(project._id)}>
@@ -208,8 +210,8 @@ export default function TaskPage() {
             </div>
           ))}
         </div>
-        <div>+</div>
-      </div>
+        <div className="newProject">+</div>
+      </div> */}
       <div className="taskAreaContainer"
         onDrop={e => handleTaskDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"), "None")}
         onDragOver={e => e.preventDefault()}

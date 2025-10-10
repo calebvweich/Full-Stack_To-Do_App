@@ -13,27 +13,12 @@
   height: 8.8vh;
   max-height: 8.8vh;
 }
-.projectContainer {
-  height: 7vh;
-  max-height: 7vh;
-  display: flex;
-  align-items: center;  
-}
-.projectName {
-  padding: 0 2vw;
-  font-size: 3vh;
-}
-.projectList {
-  display: flex;
-}
-.projectActive {
-  /* active project styles */
-}
 .taskAreaContainer {
+  padding-top: 2vh;
   overflow: auto;
   gap: 2rem;
   height: 77.2vh;
-  max-height: 72.2vh;
+  max-height: 77.2vh;
 }
 .taskArea {
   display: flex;

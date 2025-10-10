@@ -2,20 +2,19 @@
 import './App.css';
 
 // PAGES
-import TaskPage from "./pages/TaskPage/TaskPage"
 import LoginPage from './pages/LoginPage/LoginPage';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { toast, ToastProvider } from './Components/Toast/Toast';
-import { newProject } from './api';
+import TaskLayout from './pages/TaskPage/TaskLayout';
 
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
+  
   //FUNCTIONS
   function logout() {
-    localStorage.setItem("token", null)
+    localStorage.clear()
     setToken(null)
   }
 
@@ -31,24 +30,14 @@ function App() {
       localStorage.removeItem("token");
     }
   }, [token]);
-  
 
   return (
     <BrowserRouter>
       <ToastProvider>
         <div className="app">
-          <header className="appHeader">
-            <div className="account">
-              <button>Account</button>
-              <div className="headerText">Welcome Name</div>
-            </div>
-            <div className="logoutButton">
-              <button onClick={logout}>Log Out</button>
-            </div>
-          </header>
           <Routes>
-            <Route path="/" element={token != null ? <Navigate to="/tasks" /> : <LoginPage validate={login} />}/>
-            <Route path="/tasks" element={token != null ? <TaskPage /> : <Navigate to="/" />}/>
+            <Route path="/" element={token !== null ? <Navigate to="/tasks" /> : <LoginPage validate={login} />}/>
+            <Route path="/tasks" element={token !== null ? <TaskLayout logout={logout} /> : <Navigate to="/" />}/>
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

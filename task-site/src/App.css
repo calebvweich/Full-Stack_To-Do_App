@@ -15,6 +15,15 @@
   display: flex;
   justify-content: space-between;
 }
+.projectList {
+  position: absolute;
+  top: 8%;
+  bottom: 80%;
+  left: 0;
+  right: 0;
+  background: #4A4A4A;
+  z-index: 10;
+}
 .account {
   width: 40%;
   display: flex;

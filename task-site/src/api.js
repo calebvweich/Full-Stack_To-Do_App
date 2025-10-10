@@ -164,18 +164,36 @@ export async function getGroups() {
   }
 }
 
-// Get Projects
-export async function getProjects() {
+// Get Project
+export async function getProject(id) {
   try {
-    const res = await apiFetch (`${API_URL}/tasks/projects/get`, {
+    const res = await apiFetch (`${API_URL}/tasks/projects/get/${id}`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       }
     });
     if (res.ok) {
-      const projects = await res.json();
-      return projects;
+      const project = await res.json();
+      return project;
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// Get Project List
+export async function getProjectList() {
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/projects/list`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    if (res.ok) {
+      const projectList = await res.json();
+      return projectList;
     }
   } catch (err) {
     console.log(err)

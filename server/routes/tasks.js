@@ -90,10 +90,11 @@ router.get("/getGroups", auth, async (req, res) => {
   }
 })
 
-// Get Projects
-router.get("/projects/get", auth, async (req, res) => {
+// Get Project
+router.get("/projects/get/:projectId", auth, async (req, res) => {
   try {
-    const userProjects = await project.find({ userId: req.user.id })
+    const { projectId } = req.params;
+    const userProject = await project.findById(projectId)
     .populate({
       path: "groups",
       populate: {
@@ -102,7 +103,18 @@ router.get("/projects/get", auth, async (req, res) => {
     })
     .populate({
       path: "tasks",
-    })
+    });
+    res.status(200).json(userProject);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: err.message })
+  }
+})
+
+// Get Project List
+router.get("/projects/list", auth, async (req, res) => {
+  try {
+    const userProjects = await project.find({ userId: req.user.id }, "_id name");
     res.status(200).json(userProjects)
   } catch (err) {
     console.log(err)
