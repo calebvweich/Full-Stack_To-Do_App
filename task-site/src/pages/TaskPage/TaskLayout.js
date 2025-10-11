@@ -27,7 +27,6 @@ export default function TaskLayout({ logout }) {
   async function addProject(name) {
     const res = await newProject(name)
     setProjectList([...projectList, res])
-    console.log(res)
   }
 
   useEffect(() => {

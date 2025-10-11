@@ -20,7 +20,13 @@
   color: #675858 !important;
   border-bottom: 1px solid #675858 !important;
 }
+.flex {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+}
 input {
+  min-width: 200px;
   width: 75%;
   background: #D9D5C9;
   padding: 2%;
