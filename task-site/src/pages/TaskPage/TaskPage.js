@@ -1,6 +1,3 @@
-// CSS
-import './TaskPage.css';
-
 // COMPONENTS
 import Task from '../../Components/Task/Task';
 import Group from '../../Components/Group/Group';
@@ -8,7 +5,7 @@ import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup, getProject } from '../../api';
+import { deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup, getProject } from '../../api';
 import { toast } from '../../Components/Toast/Toast';
 
 export default function TaskPage({ currentProject }) {
@@ -27,9 +24,7 @@ export default function TaskPage({ currentProject }) {
 
   //FUNCTIONS
   async function getUserTasks() {
-    console.log(currentProject)
     const projectRes = await getProject(currentProject)
-    console.log(projectRes)
     setGroups(projectRes.groups)
     setTasks(projectRes.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
   }
@@ -165,7 +160,7 @@ export default function TaskPage({ currentProject }) {
   // useEffect to get tasks and groups
   useEffect(() => {
     getUserTasks()
-  }, [])
+  }, [currentProject])
 
   return (
     <div className="body">

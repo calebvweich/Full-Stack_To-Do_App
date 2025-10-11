@@ -1,6 +1,8 @@
+// CSS
+import './TaskPage.css';
 import TaskHeader from "./TaskHeader";
 import TaskPage from "./TaskPage";
-import { getProjectList } from "../../api";
+import { getProjectList, newProject } from "../../api";
 import { useState, useEffect } from "react";
 
 export default function TaskLayout({ logout }) {
@@ -21,6 +23,12 @@ export default function TaskLayout({ logout }) {
     localStorage.setItem("project", JSON.stringify(newProject))
     setCurrentProject(newProject)
   }
+  
+  async function addProject(name) {
+    const res = await newProject(name)
+    setProjectList([...projectList, res])
+    console.log(res)
+  }
 
   useEffect(() => {
     getProjects()
@@ -28,7 +36,7 @@ export default function TaskLayout({ logout }) {
 
   return (
     <>
-      <TaskHeader logout={logout} currentProject={currentProject} />
+      <TaskHeader logout={logout} currentProject={currentProject} projectList={projectList} switchProject={switchProject} addProject={addProject} />
       <TaskPage currentProject={currentProject._id} />
     </>
   )

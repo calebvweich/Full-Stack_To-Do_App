@@ -6,6 +6,48 @@
   left: 0;
   right: 0;
 }
+.appHeader {
+  position: absolute;
+  top: 0;
+  bottom: 90%;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  background: #4A4A4A;
+  border-radius: 0px 0px 14px 14px;
+  display: flex;
+  justify-content: space-between;
+}
+.projectList {
+  position: absolute;
+  top: 8%;
+  left: 0;
+  background: #4A4A4A;
+  z-index: 10;
+  display: grid;
+}
+.project {
+  width: 40%;
+  display: flex;
+  gap: 2rem;
+}
+.headerText {
+  font-size: 32px;
+  color: #D9D9D9;
+}
+.projectSelect {
+  font-size: 20px;
+  color: #D9D9D9;
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+}
+.logoutButton {
+  button {
+    color: white;
+    border: 1px solid white;
+  }
+}
 .options {
   display: flex;
   justify-content: space-between;

@@ -60,7 +60,7 @@ router.post("/projects/new/:name", auth, async (req, res) => {
       name: name
     })
     await newProject.save()
-    res.status(201).json(newProject)
+    res.status(201).json({ _id: newProject._id, name: newProject.name })
   } catch (err) {
     console.log(err)
     res.status(500).json({ message: "Server error" });

@@ -3,7 +3,7 @@ import "./Task.css"
 import { useState } from "react";
 import Progress from "../Progress/Progress";
 import { DeleteDialog } from "../Dialog/Delete/Delete";
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline, MdCheckCircle, MdCheckCircleOutline } from "react-icons/md";
 
 export default function Task({task, manageMode, statusOptions, taskDeletion, onReorderSteps, addStep, updateStatus, toggleStep}) {
   const [newStep, setNewStep] = useState("")
@@ -83,8 +83,8 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
               onDragOver={(e) => e.preventDefault()} // allow drop
               onDrop={(e) => handleDrop(e, task._id, index)}
             >
-              {step.name} 
-              <div className={step.completed ? "checked checkbox" : "checkbox"}/>
+              {step.name}
+              {step.completed ? <MdCheckCircle /> : <MdCheckCircleOutline />}
             </div>
           )
         })}
