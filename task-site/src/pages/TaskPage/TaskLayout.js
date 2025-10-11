@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 export default function TaskLayout({ logout }) {
   const [projectList, setProjectList] = useState([])
   const [currentProject, setCurrentProject] = useState(JSON.parse(localStorage.getItem("project")))
-  console.log(currentProject)
 
   async function getProjects() {
     const projectRes = await getProjectList();

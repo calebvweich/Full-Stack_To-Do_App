@@ -3,7 +3,7 @@ import "./Dialog.css"
 export default function Dialog({ close, title, content }) {
   return(
     <div>
-      <div className="background" onClick={close} />
+      <div className="background"/>
       <div className="dialogContainer">
         <div className="dialogHeader">
           {title}
