@@ -40,7 +40,9 @@ export async function register(username, name, password) {
       const message = await res.json();
       toast.error(`Error: ${message.msg}`);
     } else {
-      return res.json();
+      const token = await res.json()
+      localStorage.setItem("token", token.token)
+      return token;
     }
   } catch (err) {
     toast.error(`Error: ${err}`)

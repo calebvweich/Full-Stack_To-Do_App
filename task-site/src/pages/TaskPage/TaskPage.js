@@ -23,9 +23,13 @@ export default function TaskPage({ currentProject }) {
 
   //FUNCTIONS
   async function getUserTasks() {
-    const projectRes = await getProject(currentProject)
-    setGroups(projectRes.groups)
-    setTasks(projectRes.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
+    if (currentProject) {
+      const projectRes = await getProject(currentProject)
+      if (projectRes) {
+        setGroups(projectRes.groups)
+        setTasks(projectRes.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
+      }
+     }
   }
 
   async function addTask(name,group,steps,dueDate) {

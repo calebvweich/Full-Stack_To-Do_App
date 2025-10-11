@@ -49,7 +49,8 @@ function Register({validate}) {
       const res = await register(username.toLowerCase(), name, password);
       if (res && res.token) {
         await validate(res.token)
-        newProject("Default")
+        const proj = await newProject("Default")
+        localStorage.setItem("project", proj)
       } else {
         console.log("Failed: ", res);
       }

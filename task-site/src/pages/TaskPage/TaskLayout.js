@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 export default function TaskLayout({ logout }) {
   const [projectList, setProjectList] = useState([])
   const [currentProject, setCurrentProject] = useState(JSON.parse(localStorage.getItem("project")))
+  console.log(currentProject)
 
   async function getProjects() {
     const projectRes = await getProjectList();
@@ -31,12 +32,12 @@ export default function TaskLayout({ logout }) {
 
   useEffect(() => {
     getProjects()
-  }, [])
+  }, [currentProject])
 
   return (
     <>
-      <TaskHeader logout={logout} currentProject={currentProject} projectList={projectList} switchProject={switchProject} addProject={addProject} />
-      <TaskPage currentProject={currentProject._id} />
+      <TaskHeader logout={logout} currentProject={currentProject && currentProject} projectList={projectList} switchProject={switchProject} addProject={addProject} />
+      <TaskPage currentProject={currentProject && currentProject._id} />
     </>
   )
 }

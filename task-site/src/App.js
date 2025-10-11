@@ -19,7 +19,6 @@ function App() {
   }
 
   function login(token) {
-    localStorage.setItem("token", token)
     setToken(token)
   }
   
