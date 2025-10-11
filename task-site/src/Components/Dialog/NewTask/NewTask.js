@@ -3,22 +3,11 @@ import "./NewTask.css"
 import { newGroup, newTask, getGroups } from "../../../api"
 import Dialog from "../Dialog"
 
-function TaskForm({steps, close, addTask}) {
+function TaskForm({steps, close, groupList, addTask}) {
   const [name, setName] = useState("")
   const [step, setStep] = useState("")
   const [group, setGroup] = useState("None")
   const [dueDate, setDueDate] = useState(null)
-
-  const [groupList, setGroupList] = useState([])
-  async function getUserGroups() {
-    const groupRes = await getGroups()
-    if (groupRes) {
-      groupRes.forEach(group => {
-        groupList.push(group.name)
-      });
-      setGroupList(groupRes)
-    }
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -30,10 +19,6 @@ function TaskForm({steps, close, addTask}) {
     steps.push({ "name": step, "completed": false });
     setStep("")
   }
-
-  useEffect(() => {
-    getUserGroups()
-  }, [])
 
   return(
     <form className="taskFormContainer" onSubmit={handleSubmit}>
@@ -62,7 +47,7 @@ function TaskForm({steps, close, addTask}) {
         <option value="None">None</option>
         {groupList.map((group) => {
           return(
-            <option value={group.name} key={group._id}>{group.name}</option>
+            <option value={group._id} key={group._id}>{group.name}</option>
           )
         })}
       </select>
@@ -72,7 +57,7 @@ function TaskForm({steps, close, addTask}) {
         onChange={(e) => (setDueDate(e.target.value))}
       />
       <div className="button">
-        <button type="submit" className="inputButton">Submit</button>
+        <button type="submit">Submit</button>
       </div>
     </form>
   )
@@ -96,7 +81,7 @@ function GroupForm({close, addGroup}) {
         onChange={(e) => setName(e.target.value)}
       />
       <div className="button">
-        <button type="submit" className="inputButton">Submit</button>
+        <button type="submit">Submit</button>
       </div>
     </form>
   )
@@ -121,7 +106,7 @@ function NewTaskHeader({tab, setTab}) {
   )
 }
 
-export function NewTask({close, tab, setTab, addTask, addGroup}) {
+export function NewTask({close, tab, groupList, setTab, addTask, addGroup}) {
   const steps = []
   return(
     <Dialog
@@ -129,7 +114,7 @@ export function NewTask({close, tab, setTab, addTask, addGroup}) {
       title={<NewTaskHeader tab={tab} setTab={setTab} />}
       content={
         tab === "Task" ?
-          <TaskForm steps={steps} close={close} addTask={addTask} />
+          <TaskForm steps={steps} close={close} groupList={groupList} addTask={addTask} />
           :
           <GroupForm close={close} addGroup={addGroup} />
       }

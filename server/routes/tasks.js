@@ -1,6 +1,7 @@
 import express from "express";
 import task from "../models/task.js";
 import group from "../models/group.js";
+import project from "../models/project.js";
 import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -8,15 +9,22 @@ const router = express.Router();
 // New Task
 router.post("/newTask", auth, async (req, res) => {
   try {
-    const { name, group, steps, dueDate } = req.body;
+    const { name, groupId, projectId, steps, dueDate } = req.body;
     const newTask = new task({
       userId: req.user.id,
       name: name,
       status: "Not-Started",
-      group: group,
+      groupId: groupId === "None" ? null : groupId,
+      projectId: projectId,
       steps: steps,
       dueDate: dueDate,
     })
+    groupId !== "None" && await group.findByIdAndUpdate(groupId, {
+      $push: { tasks: newTask._id }
+    })
+    await project.findByIdAndUpdate(projectId, {
+      $push: { tasks: newTask._id },
+    });
     await newTask.save();
     res.status(201).json(newTask);
   } catch (err) {
@@ -27,15 +35,35 @@ router.post("/newTask", auth, async (req, res) => {
 // New Group
 router.post("/newGroup", auth, async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, projectId } = req.body;
     const newGroup = new group({
       userId: req.user.id,
-      name: name
+      name: name,
+      projectId: projectId,
     })
+    await project.findByIdAndUpdate(projectId, {
+      $push: { groups: newGroup._id },
+    });
     await newGroup.save();
     res.status(201).json(newGroup)
   } catch (err) {
     res.status(500).json({ msg: err.message })
+  }
+})
+
+// New Project
+router.post("/projects/new/:name", auth, async (req, res) => {
+  try {
+    const { name } = req.params;
+    const newProject = new project({
+      userId: req.user.id,
+      name: name
+    })
+    await newProject.save()
+    res.status(201).json({ _id: newProject._id, name: newProject.name })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "Server error" });
   }
 })
 
@@ -62,9 +90,44 @@ router.get("/getGroups", auth, async (req, res) => {
   }
 })
 
+// Get Project
+router.get("/projects/get/:projectId", auth, async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const userProject = await project.findById(projectId)
+    .populate({
+      path: "groups",
+      populate: {
+        path: "tasks"
+      }
+    })
+    .populate({
+      path: "tasks",
+    });
+    res.status(200).json(userProject);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: err.message })
+  }
+})
+
+// Get Project List
+router.get("/projects/list", auth, async (req, res) => {
+  try {
+    const userProjects = await project.find({ userId: req.user.id }, "_id name");
+    res.status(200).json(userProjects)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: err.message })
+  }
+})
+
 // Delete Task
 router.delete("/task/:id", async (req, res) => {
   try {
+    const currentTask = await task.findById(req.params.id);
+    await group.findByIdAndUpdate(currentTask.groupId, { $pull: { tasks: req.params.id } });
+    await project.findByIdAndUpdate(currentTask.projectId, { $pull: { tasks: req.params.id } });
     await task.findByIdAndDelete(req.params.id);
     res.json({ message: "Task deleted" });
   } catch (err) {
@@ -76,10 +139,12 @@ router.delete("/task/:id", async (req, res) => {
 router.delete("/group/:id", async (req, res) => {
   try {
     const currentGroup = await group.findById(req.params.id)
-    const currentTasks = await task.find({ "group": { $eq: currentGroup.name }})
+    const currentTasks = await task.find({ "groupId": { $eq: currentGroup._id }})
     currentTasks.forEach(async toDel => {
+      await project.findByIdAndUpdate(toDel.projectId, { $pull: { tasks: toDel._id } });
       await task.findByIdAndDelete(toDel._id)
     })
+    await project.findByIdAndUpdate(currentGroup.projectId, { $pull: { groups: req.params.id } });
     await group.findByIdAndDelete(req.params.id);
     res.json({ message: "Group deleted" });
   } catch (err) {
@@ -87,16 +152,38 @@ router.delete("/group/:id", async (req, res) => {
   }
 });
 
-// Reorder Tasks
-router.patch("/:groupName/reorder/:taskId", async (req, res) => {
+// Delete Project
+router.delete("/project/delete/:id", async (req, res) => {
   try {
-    const { groupName, taskId } = req.params;
-    const currentTask = await task.findById(taskId);
-    currentTask.group = groupName;
-    await currentTask.save();
-    res.status(200).json(groupName);
-    // delete task, push task to group
+    const currentTasks = await task.find({ "projectId": { $eq: req.params.id }})
+    currentTasks.forEach(async toDel => {
+      await task.findByIdAndDelete(toDel._id)
+    })
+    const currentGroups = await group.find({ "projectId": { $eq: req.params.id }})
+    currentGroups.forEach(async toDel => {
+      await group.findByIdAndDelete(toDel._id)
+    })
+    await project.findOneAndDelete({ _id: id })
+    res.json({ message: "Project deleted" })
   } catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: err.message })
+  }
+})
+
+// Reorder Tasks
+router.patch("/:groupId/reorder/:taskId", async (req, res) => {
+  // ALLOW NULL VALUE
+  try {
+    const { groupId, taskId } = req.params;
+    const currentTask = await task.findById(taskId);
+    await group.findByIdAndUpdate(currentTask.groupId, { $pull: { tasks: taskId } });
+    groupId !== "None" && await group.findByIdAndUpdate(groupId, { $push: { tasks: taskId } });
+    currentTask.groupId = groupId === "None" ? null : groupId;
+    await currentTask.save();
+    res.status(200);
+  } catch (err) {
+    console.log(err)
     res.status(500).json({ message: "Server error" });
   }
 })
@@ -196,5 +283,6 @@ router.delete("/:taskId/deleteStep/:stepId", auth, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 })
+
 
 export default router;

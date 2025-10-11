@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { login, register } from "../../api";
+import { login, newProject, register } from "../../api";
 import "./LoginPage.css"
 
 function Login({validate}) {
@@ -33,7 +33,7 @@ function Login({validate}) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div className="button">
-        <button type="submit" className="inputButton">Login</button>
+        <button type="submit">Login</button>
       </div>
     </form>
   )
@@ -48,7 +48,8 @@ function Register({validate}) {
       e.preventDefault();
       const res = await register(username.toLowerCase(), name, password);
       if (res && res.token) {
-        validate(res.token)
+        await validate(res.token)
+        newProject("Default")
       } else {
         console.log("Failed: ", res);
       }
@@ -76,7 +77,7 @@ function Register({validate}) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div className="button">
-        <button type="submit" className="inputButton">Register</button>
+        <button type="submit">Register</button>
       </div>
     </form>
   )

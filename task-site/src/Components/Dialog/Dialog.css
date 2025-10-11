@@ -5,6 +5,7 @@
   left: 0;
   right: 0;
   background: rgba(1, 1, 1, 0.7);
+  z-index: 20;
 }
 .dialogContainer {
   position: fixed;
@@ -12,7 +13,7 @@
   left: 50%;
   transform: translate(-50%,-50%);
   background: #EDE7DA;
-  z-index: 10;
+  z-index: 21;
   border-radius: 25px;
   width: fit-content;
 }

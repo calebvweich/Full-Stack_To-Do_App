@@ -28,6 +28,9 @@
   background-color: #D9D5C9;
   cursor: pointer;
 }
+.stepCompleted {
+  text-decoration: line-through;
+}
 .checked {
   background-color: rgb(58, 126, 190);
 }

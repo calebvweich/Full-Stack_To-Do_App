@@ -1,18 +1,14 @@
-// CSS
-import './TaskPage.css';
-
 // COMPONENTS
-import Button from '../../Components/Button/Button';
 import Task from '../../Components/Task/Task';
 import Group from '../../Components/Group/Group';
 import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
 
 // LIBRARIES
 import { useEffect, useState } from 'react';
-import { getTasks, getGroups, deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup } from '../../api';
+import { deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup, getProject } from '../../api';
 import { toast } from '../../Components/Toast/Toast';
 
-export default function TaskPage() {
+export default function TaskPage({ currentProject }) {
   // VARIABLES
   const [selectedGroups, setSelectedGroups] = useState([])
   const [selectedStatus, setSelectedStatus] = useState("")
@@ -20,26 +16,29 @@ export default function TaskPage() {
   const [dialogTab, setDialogTab] = useState("Task")
   const statusOptions = ["Not-Started", "In-Progress", "Completed", "On-Hold"]
   const [manageMode, setManageMode] = useState(false)
+  // const [currentProject, setCurrentProject] = useState(null)
   // DB
   const [tasks, setTasks] = useState([])
   const [groups, setGroups] = useState([])
+  // const [projects, setProjects] = useState([])
 
   //FUNCTIONS
   async function getUserTasks() {
-    const groupRes = await getGroups()
-    if (groupRes) {
-      setGroups(groupRes)
-    }
-    const taskRes = await getTasks()
-    if (taskRes) {
-      setTasks(taskRes)
-    }
+    const projectRes = await getProject(currentProject)
+    setGroups(projectRes.groups)
+    setTasks(projectRes.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
   }
 
+  // function getProject(id) {
+  //   const project = datasource.find(p => p._id === id)
+  //   setCurrentProject(project)
+  //   setGroups(project.groups)
+  //   setTasks(project.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
+  // }
+
   async function addTask(name,group,steps,dueDate) {
-    const res = await newTask(name,group,steps,dueDate);
+    const res = await newTask(name,group,currentProject._id,steps,dueDate);
     if (res) {
-      console.log(res)
       setTasks([ ...tasks, res ])
     } else {
       console.log("Failed: ", res);
@@ -47,9 +46,8 @@ export default function TaskPage() {
   }
 
   async function addGroup(name) {
-    const res = await newGroup(name);
+    const res = await newGroup(name, currentProject._id);
     if (res) {
-      console.log(res)
       setGroups([ ...groups, res ])
     } else {
       console.log("Failed: ", res);
@@ -80,10 +78,10 @@ export default function TaskPage() {
 
   async function handleTaskDrop(type, taskId, newGroupId) {
     if (type === "task") {
-      const newGroup = await reorderTasks(newGroupId, taskId)
+      reorderTasks(newGroupId, taskId)
       setTasks(prev =>
         prev.map(task =>
-          task._id === taskId ? { ...task, group: newGroup } : task
+          task._id === taskId ? { ...task, groupId: newGroupId === "None" ? null : newGroupId } : task
         )
       );
     }
@@ -94,21 +92,18 @@ export default function TaskPage() {
     const oldTaskSteps = oldTask.steps.filter(s => s._id !== stepId)
     const newTask = newTaskId === oldTaskId ? { ...oldTask, steps: oldTaskSteps} : tasks.find(t => t._id === newTaskId)
     const step = oldTask.steps.find(s => s._id === stepId)
-    newTask.steps.splice(newIndex, 0, step)
+    const newTaskSteps = [...newTask.steps]
+    newTaskSteps.splice(newIndex, 0, step)
     setTasks(prev =>
       prev.map(task =>
         task._id === newTaskId
-          ? { ...task, steps: newTask.steps }
+          ? { ...task, steps: newTaskSteps }
         : task._id === oldTaskId
           ? { ...task, steps: oldTaskSteps }
         : task
       )
     )
-    reorderSteps(newTaskId === oldTaskId ? { [oldTaskId]: oldTaskSteps.map(s => s._id) } : { [oldTaskId]: oldTaskSteps.map(s => s._id), [newTaskId]: newTask.steps.map(s => s._id) }, stepId)
-  }
-
-  function filterTask(groupName) {
-    return(tasks.filter(task => task.group === groupName && (task.status === selectedStatus || selectedStatus === "")))
+    reorderSteps(newTaskId === oldTaskId ? { [newTaskId]: newTaskSteps.map(s => s._id) } : { [oldTaskId]: oldTaskSteps.map(s => s._id), [newTaskId]: newTaskSteps.map(s => s._id) }, stepId)
   }
 
   function toggleSelect(groupName) {
@@ -165,7 +160,7 @@ export default function TaskPage() {
   // useEffect to get tasks and groups
   useEffect(() => {
     getUserTasks()
-  }, [])
+  }, [currentProject])
 
   return (
     <div className="body">
@@ -176,7 +171,7 @@ export default function TaskPage() {
               <div className="filters">
                 {groups.map((group) => {
                   return(
-                    <div key={group._id} className={`${selectedGroups.includes(group.name) && "active"} filter`} onClick={() => toggleSelect(group.name)}>{group.name}</div>
+                    <div key={group._id} className={`${selectedGroups.includes(group._id) && "active"} filter`} onClick={() => toggleSelect(group._id)}>{group.name}</div>
                   )
                 })}
               </div>
@@ -187,7 +182,7 @@ export default function TaskPage() {
             <div className="filters">
               {statusOptions.map((name, index) => {
                 return(
-                  <div key={index} className={`${selectedStatus === name && "active"} filter`} onClick={() => changeStatusFilter(name)}>{name}</div>
+                  <button key={index} className={`${selectedStatus === name && "active"}`} onClick={() => changeStatusFilter(name)}>{name}</button>
                 )
               })}
             </div>
@@ -197,18 +192,28 @@ export default function TaskPage() {
         <div className="newButton">
           Manage Tasks
           <div className="manageButtons">
-            <Button text={"New"} onClick={() => setDialogOpen(true)} />
-            <Button text={"Manage"} onClick={() => setManageMode(!manageMode)} />
+            <button onClick={() => setDialogOpen(true)}>New</button>
+            <button onClick={() => setManageMode(!manageMode)}>Manage</button>
           </div>
         </div>
       </div>
+      {/* <div className="projectContainer">
+        <div className="projectList">
+          {projects.map(project => (
+            <div className="projectName" onClick={() => getProject(project._id)}>
+              {project.name}
+            </div>
+          ))}
+        </div>
+        <div className="newProject">+</div>
+      </div> */}
       <div className="taskAreaContainer"
         onDrop={e => handleTaskDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"), "None")}
         onDragOver={e => e.preventDefault()}
       >
       <div className="taskArea">
         {groups.length > 0 && groups.map((group) => {
-          if ((selectedGroups.includes(group.name) || selectedGroups.length === 0)) {
+          if ((selectedGroups.includes(group._id) || selectedGroups.length === 0)) {
             return(
               <Group
                 key={group._id}
@@ -217,7 +222,7 @@ export default function TaskPage() {
                 groupDeletion={handleDelete}
                 onTaskDrop={handleTaskDrop}
               >
-                {filterTask(group.name) ? filterTask(group.name).map((task) => {
+                {tasks.filter(t => t.groupId === group._id && (t.status === selectedStatus || selectedStatus === "")).map((task) => {
                   return(
                     <Task
                       key={task._id}
@@ -231,10 +236,7 @@ export default function TaskPage() {
                       updateStatus={changeStatus}
                     />
                   )
-                })
-                  :
-                  <div>None</div>
-                }
+                })}
               </Group>
             )
           } else {
@@ -243,7 +245,7 @@ export default function TaskPage() {
             )
           }
         })}
-        {!selectedGroups && filterTask("None").map((task) => {
+        {!selectedGroups.length && tasks.filter(t => !t.groupId && (t.status === selectedStatus || selectedStatus === "")).map((task) => {
           return(
             <Task
               key={task._id}
@@ -264,6 +266,7 @@ export default function TaskPage() {
         <NewTask
           close={() => setDialogOpen(false)}
           tab={dialogTab}
+          groupList={groups}
           setTab={setDialogTab}
           addTask={addTask}
           addGroup={addGroup}

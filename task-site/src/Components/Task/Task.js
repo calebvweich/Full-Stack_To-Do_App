@@ -2,9 +2,8 @@ import "./Task.css"
 
 import { useState } from "react";
 import Progress from "../Progress/Progress";
-import Button from "../Button/Button";
 import { DeleteDialog } from "../Dialog/Delete/Delete";
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline, MdCheckCircle, MdCheckCircleOutline } from "react-icons/md";
 
 export default function Task({task, manageMode, statusOptions, taskDeletion, onReorderSteps, addStep, updateStatus, toggleStep}) {
   const [newStep, setNewStep] = useState("")
@@ -70,22 +69,22 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
             <div>{task.status}</div>
           }
         </div>
-        {manageMode ? <Button text={<MdDeleteOutline />} onClick={() => setDeleteInfo({"object": task, type: "task"})} /> : <Progress pcent={pcentComplete(task)} />}
+        {manageMode ? <button onClick={() => setDeleteInfo({"object": task, type: "task"})}><MdDeleteOutline /></button> : <Progress pcent={pcentComplete(task)} />}
       </div>
       <div className="stepsList">
         {task.steps.map((step, index) => {
           return(
             <div
               key={index}
-              className="step stepHover"
+              className={`${step.completed && `stepCompleted`} step stepHover`}
               onClick={() => manageMode ? setDeleteInfo({"object": step, type: "step", extra: task._id}) : toggleStep(task._id, step._id)}
               draggable
               onDragStart={(e) => handleDragStart(e, step._id, task._id)}
               onDragOver={(e) => e.preventDefault()} // allow drop
               onDrop={(e) => handleDrop(e, task._id, index)}
             >
-              {step.name} 
-              <div className={step.completed ? "checked checkbox" : "checkbox"}/>
+              {step.name}
+              {step.completed ? <MdCheckCircle /> : <MdCheckCircleOutline />}
             </div>
           )
         })}

@@ -1,6 +1,6 @@
 import "./Dialog.css"
 
-export default function Dialog({ close, title, content, buttons }) {
+export default function Dialog({ close, title, content }) {
   return(
     <div>
       <div className="background" onClick={close} />

@@ -71,7 +71,7 @@ export async function login(username, password) {
 
 // -----TASKS------
 // New Task
-export async function newTask(name, group, steps, dueDate) {
+export async function newTask(name, groupId, projectId, steps, dueDate) {
   try {
     steps.forEach((step, index) => {
       step.order = index
@@ -82,7 +82,7 @@ export async function newTask(name, group, steps, dueDate) {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
-      body: JSON.stringify({ name, group, steps, dueDate })
+      body: JSON.stringify({ name, groupId, projectId, steps, dueDate })
     });
     const data = await res.json();
 
@@ -93,7 +93,7 @@ export async function newTask(name, group, steps, dueDate) {
 }
 
 // New Group
-export async function newGroup(name) {
+export async function newGroup(name, projectId) {
   try {
     const res = await apiFetch(`${API_URL}/tasks/newGroup`, {
       method: "POST",
@@ -101,11 +101,28 @@ export async function newGroup(name) {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
-      body: JSON.stringify({ name })
+      body: JSON.stringify({ name, projectId })
     });
     const data = await res.json();
 
     return data;
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// New Project
+export async function newProject(name) {
+  try {
+    const res = await apiFetch(`${API_URL}/tasks/projects/new/${name}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+    })
+    const data = await res.json()
+    return data
   } catch (err) {
     console.log(err)
   }
@@ -147,6 +164,42 @@ export async function getGroups() {
   }
 }
 
+// Get Project
+export async function getProject(id) {
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/projects/get/${id}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    if (res.ok) {
+      const project = await res.json();
+      return project;
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// Get Project List
+export async function getProjectList() {
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/projects/list`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    if (res.ok) {
+      const projectList = await res.json();
+      return projectList;
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // Delete Task
 export async function deleteTask(id) {
   try {
@@ -169,6 +222,20 @@ export async function deleteGroup(id) {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// Delete Project
+export async function deleteProject(id) {
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/project/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
     })
   } catch (err) {
     console.log(err)
