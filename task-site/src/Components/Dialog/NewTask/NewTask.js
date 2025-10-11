@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import "./NewTask.css"
-import { newGroup, newTask, getGroups } from "../../../api"
 import Dialog from "../Dialog"
 
 function TaskForm({steps, close, groupList, addTask}) {

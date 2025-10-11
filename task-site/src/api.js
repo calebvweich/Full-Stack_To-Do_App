@@ -203,7 +203,7 @@ export async function getProjectList() {
 // Delete Task
 export async function deleteTask(id) {
   try {
-    const res = await apiFetch (`${API_URL}/tasks/task/${id}`, {
+    await apiFetch (`${API_URL}/tasks/task/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -217,7 +217,7 @@ export async function deleteTask(id) {
 // Delete Group
 export async function deleteGroup(id) {
   try {
-    const res = await apiFetch (`${API_URL}/tasks/group/${id}`, {
+    await apiFetch (`${API_URL}/tasks/group/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -231,7 +231,7 @@ export async function deleteGroup(id) {
 // Delete Project
 export async function deleteProject(id) {
   try {
-    const res = await apiFetch (`${API_URL}/tasks/project/delete/${id}`, {
+    await apiFetch (`${API_URL}/tasks/project/delete/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -245,7 +245,7 @@ export async function deleteProject(id) {
 // Delete Step
 export async function deleteStep(task, step) {
   try {
-    const res = await apiFetch (`${API_URL}/tasks/${task}/deleteStep/${step}`, {
+    await apiFetch (`${API_URL}/tasks/${task}/deleteStep/${step}`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -294,7 +294,7 @@ export async function reorderSteps(tasks, stepId) {
 // Toggle Step Completion
 export async function toggleStepCompletion(task, step) {
   try {
-    const res = await apiFetch (`${API_URL}/tasks/${task}/steps/${step}`, {
+    await apiFetch (`${API_URL}/tasks/${task}/steps/${step}`, {
       method: "PATCH"
     })
   } catch (err) {
@@ -305,7 +305,7 @@ export async function toggleStepCompletion(task, step) {
 // Change task Status
 export async function setTaskStatus(taskId, newStatus) {
   try {
-    const res = await apiFetch (`${API_URL}/tasks/${taskId}/status`, {
+    await apiFetch (`${API_URL}/tasks/${taskId}/status`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

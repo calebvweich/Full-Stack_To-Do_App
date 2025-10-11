@@ -5,7 +5,7 @@ import './App.css';
 import LoginPage from './pages/LoginPage/LoginPage';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { useState, useEffect } from 'react';
-import { toast, ToastProvider } from './Components/Toast/Toast';
+import { ToastProvider } from './Components/Toast/Toast';
 import TaskLayout from './pages/TaskPage/TaskLayout';
 
 

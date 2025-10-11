@@ -6,7 +6,6 @@ import { NewTask } from '../../Components/Dialog/NewTask/NewTask';
 // LIBRARIES
 import { useEffect, useState } from 'react';
 import { deleteTask, deleteGroup, reorderSteps, deleteStep, reorderTasks, toggleStepCompletion, addStepToTask, setTaskStatus, newTask, newGroup, getProject } from '../../api';
-import { toast } from '../../Components/Toast/Toast';
 
 export default function TaskPage({ currentProject }) {
   // VARIABLES
@@ -28,13 +27,6 @@ export default function TaskPage({ currentProject }) {
     setGroups(projectRes.groups)
     setTasks(projectRes.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
   }
-
-  // function getProject(id) {
-  //   const project = datasource.find(p => p._id === id)
-  //   setCurrentProject(project)
-  //   setGroups(project.groups)
-  //   setTasks(project.tasks.map(t => ({ ...t, steps: [...t.steps].sort(function(a,b){return a.order - b.order})})))
-  // }
 
   async function addTask(name,group,steps,dueDate) {
     const res = await newTask(name,group,currentProject._id,steps,dueDate);
@@ -197,16 +189,6 @@ export default function TaskPage({ currentProject }) {
           </div>
         </div>
       </div>
-      {/* <div className="projectContainer">
-        <div className="projectList">
-          {projects.map(project => (
-            <div className="projectName" onClick={() => getProject(project._id)}>
-              {project.name}
-            </div>
-          ))}
-        </div>
-        <div className="newProject">+</div>
-      </div> */}
       <div className="taskAreaContainer"
         onDrop={e => handleTaskDrop(e.dataTransfer.getData("type"), e.dataTransfer.getData("taskId"), "None")}
         onDragOver={e => e.preventDefault()}
