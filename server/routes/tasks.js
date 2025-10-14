@@ -171,6 +171,18 @@ router.delete("/project/delete/:id", async (req, res) => {
   }
 })
 
+// Edit Project Name
+router.patch("/:projId/rename/:name", async (req, res) => {
+  try {
+    const { projId, name } = req.params;
+    const newProj = await project.findByIdAndUpdate(projId, { name: name }, {new: true});
+    res.status(200);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: err.message });
+  }
+})
+
 // Reorder Tasks
 router.patch("/:groupId/reorder/:taskId", async (req, res) => {
   // ALLOW NULL VALUE

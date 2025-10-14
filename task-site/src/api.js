@@ -258,6 +258,23 @@ export async function deleteStep(task, step) {
   }
 }
 
+// Rename Project
+export async function renameProj(id, name) {
+  try {
+    const res = await apiFetch (`${API_URL}/tasks/${id}/rename/${name}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    if (res.ok) {
+      return
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 // Reorder Tasks
 export async function reorderTasks(groupId, taskId) {
   try {

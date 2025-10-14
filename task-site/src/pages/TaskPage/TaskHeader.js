@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { MdAppRegistration, MdCheckCircle, MdCheckCircleOutline } from "react-icons/md";
+import { MdAppRegistration, MdCheckCircle, MdCheckCircleOutline, MdEditSquare, MdDeleteOutline } from "react-icons/md";
 import NewProjectDialog from "../../Components/Dialog/Project/NewProject";
-export default function TaskHeader({ logout, currentProject, projectList, switchProject, addProject }) {
+import RenameProjDialog from "../../Components/Dialog/Project/RenameProj";
+export default function TaskHeader({ logout, currentProject, projectList, switchProject, addProject, renameProject }) {
   const [showList, setShowList] = useState(false);
-  const [showDialog, setShowDialog] = useState(false);
+  const [showNewDialog, setShowNewDialog] = useState(false);
+  const [projToRename, setProjToRename] = useState({});
   const listRef = useRef(null);
   const showButton = useRef(null);
   function handleAddProject(name) {
@@ -38,12 +40,23 @@ export default function TaskHeader({ logout, currentProject, projectList, switch
       <div className="projectList" ref={listRef}>
         {projectList.map(p => {
           return (
-            <button key={p._id} className="projectSelect" onClick={() => handleSwitch(p._id)}>{p.name}{p._id === currentProject._id ? <MdCheckCircle /> : <MdCheckCircleOutline />}</button>
+            <div className="projectSelect">
+              <button key={p._id} className="projectSelect" onClick={() => handleSwitch(p._id)}>
+                {p._id === currentProject._id ? <MdCheckCircle /> : <MdCheckCircleOutline />}{p.name}
+              </button>
+              <span className="flex">
+                <button className="projectSelect" onClick={() => setProjToRename(p)}>{<MdEditSquare />}</button>
+                <button className="projectSelect">{<MdDeleteOutline />}</button>
+              </span>
+            </div>
           )
         })}
-        <button className="projectSelect" onClick={() => setShowDialog(true)}>New Project</button>
-        {showDialog &&
-        <NewProjectDialog close={() => setShowDialog(false)} addProject={handleAddProject} />
+        <button className="projectSelect" onClick={() => setShowNewDialog(true)}>New Project</button>
+        {showNewDialog &&
+        <NewProjectDialog close={() => setShowNewDialog(false)} addProject={handleAddProject} />
+        }
+        {projToRename.name &&
+        <RenameProjDialog close={() => setProjToRename({})} renameProj={renameProject} projToRename={projToRename} />
         }
       </div>}
     </>
