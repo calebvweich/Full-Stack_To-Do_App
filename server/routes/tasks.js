@@ -153,13 +153,14 @@ router.delete("/group/:id", async (req, res) => {
 });
 
 // Delete Project
-router.delete("/project/delete/:id", async (req, res) => {
+router.delete("/project/:id", async (req, res) => {
   try {
-    const currentTasks = await task.find({ "projectId": { $eq: req.params.id }})
+    const { id } = req.params
+    const currentTasks = await task.find({ "projectId": { $eq: id }})
     currentTasks.forEach(async toDel => {
       await task.findByIdAndDelete(toDel._id)
     })
-    const currentGroups = await group.find({ "projectId": { $eq: req.params.id }})
+    const currentGroups = await group.find({ "projectId": { $eq: id }})
     currentGroups.forEach(async toDel => {
       await group.findByIdAndDelete(toDel._id)
     })

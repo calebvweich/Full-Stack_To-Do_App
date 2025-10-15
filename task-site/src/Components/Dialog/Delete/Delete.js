@@ -1,14 +1,13 @@
 import Dialog from "../Dialog"
 import "./Delete.css"
 
-export function DeleteDialogHeader({ toDelete }) {
-  return(
-    <div>Delete {toDelete.type}: {toDelete.object.name}?</div>
-  )
-}
-
 export function DeleteDialog({ toDelete, handleDelete, close }) {
+  // toDelete: {object: [object id, name], type: [project/group/task/step], extra: [taskId (for step)]}
+  // handleDelete: function to delete object
+  // close: function to close dialog
+  console.log(toDelete)
   function deleteObject() {
+    console.log(toDelete.object._id)
     handleDelete(toDelete.object._id, toDelete.type, toDelete.extra)
     close()
   }
@@ -16,7 +15,7 @@ export function DeleteDialog({ toDelete, handleDelete, close }) {
   return(
     <Dialog
       close={close}
-      title={<DeleteDialogHeader toDelete={toDelete} />}
+      title={<div>Delete {toDelete.type}: {toDelete.object.name}?</div>}
       content={
         <div>
           <div>

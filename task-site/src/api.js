@@ -232,8 +232,9 @@ export async function deleteGroup(id) {
 
 // Delete Project
 export async function deleteProject(id) {
+  console.log(id)
   try {
-    await apiFetch (`${API_URL}/tasks/project/delete/${id}`, {
+    await apiFetch (`${API_URL}/tasks/project/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`

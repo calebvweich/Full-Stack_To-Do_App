@@ -2,7 +2,7 @@
 import './TaskPage.css';
 import TaskHeader from "./TaskHeader";
 import TaskPage from "./TaskPage";
-import { getProjectList, newProject, renameProj } from "../../api";
+import { deleteProject, getProjectList, newProject, renameProj } from "../../api";
 import { useState, useEffect } from "react";
 
 export default function TaskLayout({ logout }) {
@@ -35,13 +35,24 @@ export default function TaskLayout({ logout }) {
     renameProj(id, name);
     if (currentProject._id === id) {
       setCurrentProject({ _id: id, name: name })
+      localStorage.setItem("project", JSON.stringify({ _id: id, name: name }))
     }
     setProjectList(prev => prev.map(p => p._id === id ? {...p, name: name} : p))
   }
 
+  async function deleteProj(id) {
+    console.log(id)
+    deleteProject(id)
+    setProjectList(projectList.filter(p => p._id !== id))
+    if (currentProject._id === id) {
+      setCurrentProject(projectList[0])
+      localStorage.setItem("project", JSON.stringify(projectList[0]))
+    }
+  }
+
   useEffect(() => {
     getProjects()
-  }, [currentProject])
+  }, [])
 
   return (
     <>
@@ -52,6 +63,7 @@ export default function TaskLayout({ logout }) {
         switchProject={switchProject}
         addProject={addProject}
         renameProject={renameProject}
+        deleteProj={deleteProj}
       />
       <TaskPage currentProject={currentProject && currentProject._id} />
     </>

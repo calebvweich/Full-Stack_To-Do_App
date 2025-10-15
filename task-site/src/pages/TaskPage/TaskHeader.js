@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { MdAppRegistration, MdCheckCircle, MdCheckCircleOutline, MdEditSquare, MdDeleteOutline } from "react-icons/md";
 import NewProjectDialog from "../../Components/Dialog/Project/NewProject";
 import RenameProjDialog from "../../Components/Dialog/Project/RenameProj";
-export default function TaskHeader({ logout, currentProject, projectList, switchProject, addProject, renameProject }) {
+import { DeleteDialog } from "../../Components/Dialog/Delete/Delete";
+export default function TaskHeader({ logout, currentProject, projectList, switchProject, addProject, renameProject, deleteProj }) {
   const [showList, setShowList] = useState(false);
   const [showNewDialog, setShowNewDialog] = useState(false);
-  const [projToRename, setProjToRename] = useState({});
+  const [projToRename, setProjToRename] = useState(null);
+  const [deleteInfo, setDeleteInfo] = useState(null)
   const listRef = useRef(null);
   const showButton = useRef(null);
   function handleAddProject(name) {
@@ -46,7 +48,7 @@ export default function TaskHeader({ logout, currentProject, projectList, switch
               </button>
               <span className="flex">
                 <button className="projectSelect" onClick={() => setProjToRename(p)}>{<MdEditSquare />}</button>
-                <button className="projectSelect">{<MdDeleteOutline />}</button>
+                <button className="projectSelect" onClick={() => setDeleteInfo(p)}>{<MdDeleteOutline />}</button>
               </span>
             </div>
           )
@@ -55,8 +57,11 @@ export default function TaskHeader({ logout, currentProject, projectList, switch
         {showNewDialog &&
         <NewProjectDialog close={() => setShowNewDialog(false)} addProject={handleAddProject} />
         }
-        {projToRename.name &&
-        <RenameProjDialog close={() => setProjToRename({})} renameProj={renameProject} projToRename={projToRename} />
+        {projToRename &&
+        <RenameProjDialog close={() => setProjToRename(null)} renameProj={renameProject} projToRename={projToRename} />
+        }
+        {deleteInfo &&
+        <DeleteDialog toDelete={{ object: deleteInfo, type: "project" }} handleDelete={deleteProj} close={() => setDeleteInfo(null)} />
         }
       </div>}
     </>

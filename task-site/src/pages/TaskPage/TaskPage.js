@@ -33,7 +33,7 @@ export default function TaskPage({ currentProject }) {
   }
 
   async function addTask(name,group,steps,dueDate) {
-    const res = await newTask(name,group,currentProject._id,steps,dueDate);
+    const res = await newTask(name,group,currentProject,steps,dueDate);
     if (res) {
       setTasks([ ...tasks, res ])
     } else {
@@ -42,7 +42,7 @@ export default function TaskPage({ currentProject }) {
   }
 
   async function addGroup(name) {
-    const res = await newGroup(name, currentProject._id);
+    const res = await newGroup(name, currentProject);
     if (res) {
       setGroups([ ...groups, res ])
     } else {
