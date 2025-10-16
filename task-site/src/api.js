@@ -18,12 +18,6 @@ async function apiFetch(url, options = {}) {
     window.location.href = "/login";
     return;
   }
-  if (!res.ok) {
-    const message = await res.text();
-    toast.error(`Error: ${message}`);
-    throw new Error(message);
-  }
-
   return res;
 }
 

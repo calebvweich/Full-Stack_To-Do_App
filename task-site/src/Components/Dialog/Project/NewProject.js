@@ -1,18 +1,21 @@
 import { useState } from "react"
 import Dialog from "../Dialog"
-
-function NewProjectHeader() {
-  return(
-    <div>New Project</div>
-  )
-}
+import { toast } from "../../Toast/Toast"
 
 export default function NewProjectDialog({ close, addProject }) {
   const [name, setName] = useState("")
+  function handleSubmit(name) {
+    if (!name) {
+      toast.error("Name is required");
+    } else {
+      addProject(name);
+      close();
+    }
+  }
   return(
     <Dialog
       close={close}
-      title={<NewProjectHeader />}
+      title={<div>New Project</div>}
       content={
         <div className="flex">
           <input
@@ -20,7 +23,7 @@ export default function NewProjectDialog({ close, addProject }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <button onClick={() => {addProject(name); close()}}>Add</button>
+          <button onClick={() => handleSubmit}>Add</button>
         </div>
       }
     />

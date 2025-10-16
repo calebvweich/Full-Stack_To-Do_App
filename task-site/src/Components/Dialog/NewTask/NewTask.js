@@ -1,27 +1,38 @@
 import { useState } from "react"
 import "./NewTask.css"
 import Dialog from "../Dialog"
+import { toast } from "../../Toast/Toast"
 
 function TaskForm({steps, close, groupList, addTask}) {
-  const [name, setName] = useState("")
-  const [step, setStep] = useState("")
-  const [group, setGroup] = useState("None")
-  const [dueDate, setDueDate] = useState(null)
+  const [name, setName] = useState("");
+  const [step, setStep] = useState("");
+  const [group, setGroup] = useState("None");
+  const [dueDate, setDueDate] = useState(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    addTask(name,group,steps,dueDate)
-    close();
+    if (!name) {
+      toast.error("Name is required");
+    } else if (!dueDate) {
+      toast.error("Due Date is required");
+    } else {
+      addTask(name,group,steps,dueDate);
+      close();
+    }
   }
 
   function addStep() {
-    steps.push({ "name": step, "completed": false });
-    setStep("")
+    if (!step) {
+      toast.error("Step cannot be blank");
+    } else {
+      steps.push({ "name": step, "completed": false });
+      setStep("");
+    }
   }
 
   return(
     <form className="taskFormContainer" onSubmit={handleSubmit}>
-      <label>Title</label><br/>
+      <label>Name</label><br/>
       <input
         type="text"
         value={name}
@@ -63,12 +74,16 @@ function TaskForm({steps, close, groupList, addTask}) {
 }
 
 function GroupForm({close, addGroup}) {
-  const [name, setName] = useState("")
+  const [name, setName] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    addGroup(name)
-    close();
+    if (!name) {
+      toast.error("Name is required");
+    } else {
+      addGroup(name);
+      close();
+    }
   }
 
   return(
