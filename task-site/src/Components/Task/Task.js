@@ -96,7 +96,7 @@ export default function Task({task, manageMode, statusOptions, taskDeletion, onR
         <input
           type="text"
           value={newStep}
-          onChange={(e) => setNewStep(e.target.value)}
+          onChange={(e) => {e.target.value.length <= 50 && setNewStep(e.target.value)}}
         />
         <button type="button" onClick={() => handleNewStep()}>+</button>
       </div>

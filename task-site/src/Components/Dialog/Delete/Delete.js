@@ -5,9 +5,7 @@ export function DeleteDialog({ toDelete, handleDelete, close }) {
   // toDelete: {object: [object id, name], type: [project/group/task/step], extra: [taskId (for step)]}
   // handleDelete: function to delete object
   // close: function to close dialog
-  console.log(toDelete)
   function deleteObject() {
-    console.log(toDelete.object._id)
     handleDelete(toDelete.object._id, toDelete.type, toDelete.extra)
     close()
   }
