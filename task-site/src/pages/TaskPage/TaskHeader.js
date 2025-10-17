@@ -42,8 +42,8 @@ export default function TaskHeader({ logout, currentProject, projectList, switch
       <div className="projectList" ref={listRef}>
         {projectList.map(p => {
           return (
-            <div className="projectSelect">
-              <button key={p._id} className="projectSelect" onClick={() => handleSwitch(p._id)}>
+            <div className="projectSelect" key={p._id}>
+              <button className="projectSelect" onClick={() => handleSwitch(p._id)}>
                 {p._id === currentProject._id ? <MdCheckCircle /> : <MdCheckCircleOutline />}{p.name}
               </button>
               <span className="flex">
