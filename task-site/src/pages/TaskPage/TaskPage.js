@@ -189,7 +189,7 @@ export default function TaskPage({ currentProject }) {
           Manage Tasks
           <div className="manageButtons">
             <button onClick={() => setDialogOpen(true)}>New</button>
-            <button onClick={() => setManageMode(!manageMode)}>Manage</button>
+            <button onClick={() => setManageMode(!manageMode)} className={manageMode ? "active" : ""}>Manage</button>
           </div>
         </div>
       </div>
