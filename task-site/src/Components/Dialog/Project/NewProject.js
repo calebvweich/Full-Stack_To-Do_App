@@ -4,7 +4,7 @@ import { toast } from "../../Toast/Toast"
 
 export default function NewProjectDialog({ close, addProject }) {
   const [name, setName] = useState("")
-  function handleSubmit(name) {
+  function handleSubmit() {
     if (!name) {
       toast.error("Name is required");
     } else {
@@ -23,7 +23,7 @@ export default function NewProjectDialog({ close, addProject }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <button onClick={() => handleSubmit}>Add</button>
+          <button onClick={() => handleSubmit()}>Add</button>
         </div>
       }
     />
